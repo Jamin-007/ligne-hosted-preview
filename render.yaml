@@ -1,0 +1,39 @@
+# render.yaml — Render Blueprint
+# Deploy: Render Dashboard -> New -> Blueprint -> pick this repo.
+# Minimal config to get the app online. Hardening (security headers, WAF,
+# rate limiting, paid plan, HA) is deferred to a follow-up.
+
+services:
+  - type: web
+    name: ligne-hosted-preview
+    runtime: node
+    plan: free              # free web instances sleep after ~15 min idle; move to starter+ for always-on
+    region: frankfurt        # single region, closest to target users
+    branch: main
+    autoDeploy: false        # deploys triggered manually / after review (funds-handling app)
+
+    # `pnpm build` also runs scripts/privacy-audit.mjs, which currently stops the
+    # build on the committed .env.example (treated as a sensitive file). Build the
+    # app directly here; run `pnpm privacy:check` in CI instead.
+    # --prod=false: Render sets NODE_ENV=production, but vinext/vite/cross-env are
+    # devDependencies and are needed for both build and start.
+    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm exec vinext build
+    startCommand: pnpm exec vinext start
+
+    # '/' returns 200. Do NOT use /api/v1/health here: the demo-backend API routes
+    # import `cloudflare:workers` (D1) which does not exist on a plain Node host,
+    # so they return 500 on Render. The site + WalletConnect + mainnet-transfer
+    # flow work; the D1-backed demo console does not. Full functionality needs a
+    # Cloudflare Workers deploy or a replacement database.
+    healthCheckPath: /
+
+    envVars:
+      - key: NODE_VERSION
+        value: "22.13.0"
+      - key: WRANGLER_LOG_PATH
+        value: .wrangler/wrangler.log
+      # Secrets: sync:false -> set once in the Render dashboard, never stored in git.
+      - key: REOWN_PROJECT_ID
+        sync: false
+      - key: MAINNET_RECEIVER_ADDRESS
+        sync: false
