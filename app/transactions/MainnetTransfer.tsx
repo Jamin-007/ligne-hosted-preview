@@ -10,6 +10,7 @@ import {
   type MainnetTransactionRequest,
   type TransferAsset,
 } from "@/lib/mainnet-transfer";
+import { parseBitcoinAmount } from "@/lib/bitcoin-payment";
 
 type WalletProvider = {
   accounts: string[];
@@ -25,6 +26,14 @@ type Receipt = {
 
 type PreparedTransfer = {
   request: MainnetTransactionRequest;
+  requestId: string;
+};
+
+type PreparedBitcoinPayment = {
+  amount: string;
+  amountSats: string;
+  paymentUri: string;
+  recipientAddress: string;
   requestId: string;
 };
 
@@ -88,6 +97,9 @@ function messageFor(error: unknown, t: (key: TranslationKey) => string) {
     return t("error.insufficient");
   }
   if (message.includes("invalid_amount")) return t("error.invalidAmount");
+  if (/bitcoin_receiver_unavailable|invalid_bitcoin_receiver_address/.test(message)) {
+    return t("error.bitcoinConfig");
+  }
   if (/failed to fetch|networkerror|wallet_config_unavailable/.test(message)) {
     return t("error.service");
   }
@@ -101,14 +113,18 @@ export function MainnetTransfer() {
   const [asset, setAsset] = useState<SelectableAsset>("USDT");
   const [amount, setAmount] = useState("");
   const [prepared, setPrepared] = useState<PreparedTransfer>();
+  const [bitcoinPayment, setBitcoinPayment] = useState<PreparedBitcoinPayment>();
   const [hash, setHash] = useState<`0x${string}`>();
   const [receipt, setReceipt] = useState<Receipt>();
   const [status, setStatus] = useState<"idle" | "connecting" | "preparing" | "signing">("idle");
   const [error, setError] = useState("");
 
   const amountIsValid = useMemo(() => {
-    if (asset === "BTC") return false;
     try {
+      if (asset === "BTC") {
+        parseBitcoinAmount(amount);
+        return true;
+      }
       parseTransferAmount(asset, amount);
       return true;
     } catch {
@@ -119,9 +135,48 @@ export function MainnetTransfer() {
 
   function resetTransfer() {
     setPrepared(undefined);
+    setBitcoinPayment(undefined);
     setHash(undefined);
     setReceipt(undefined);
     setError("");
+  }
+
+  async function prepareBitcoinPayment() {
+    if (asset !== "BTC") return;
+    setStatus("preparing");
+    setError("");
+    try {
+      const response = await fetch("/api/v1/bitcoin/transfer-requests", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ amount }),
+      });
+      const body = await response.json() as {
+        data?: {
+          amount: string;
+          amount_sats: string;
+          payment_uri: string;
+          recipient_address: string;
+          request_id: string;
+        };
+        error?: { code?: string };
+      };
+      if (!response.ok || !body.data) {
+        throw new Error(body.error?.code ?? "BITCOIN_REQUEST_FAILED");
+      }
+      setBitcoinPayment({
+        amount: body.data.amount,
+        amountSats: body.data.amount_sats,
+        paymentUri: body.data.payment_uri,
+        recipientAddress: body.data.recipient_address,
+        requestId: body.data.request_id,
+      });
+    } catch (caught) {
+      console.error("[Ligne Bitcoin] Échec de la préparation", caught);
+      setError(messageFor(caught, t));
+    } finally {
+      setStatus("idle");
+    }
   }
 
   async function connect() {
@@ -264,13 +319,66 @@ export function MainnetTransfer() {
       </div>
 
       {asset === "BTC" ? (
-        <div className="bitcoin-preview" role="status">
-          <Image src="/wallet-assets/btc.svg" alt="" width={54} height={54} />
-          <div>
-            <span>{t("transfer.bitcoinPreviewBadge")}</span>
-            <strong>{t("transfer.bitcoinPreviewTitle")}</strong>
-            <p>{t("transfer.bitcoinPreviewText")}</p>
+        <div className="transfer-grid bitcoin-transfer-grid">
+          <div className="transfer-form">
+            <div className="bitcoin-transfer-intro">
+              <Image src="/wallet-assets/btc.svg" alt="" width={54} height={54} />
+              <div>
+                <span>{t("transfer.bitcoinReadyBadge")}</span>
+                <strong>{t("transfer.bitcoinReadyTitle")}</strong>
+                <p>{t("transfer.bitcoinReadyText")}</p>
+              </div>
+            </div>
+            <fieldset>
+              <label htmlFor="bitcoin-transfer-amount">{t("transfer.amount")}</label>
+              <div className="mainnet-amount">
+                <input
+                  id="bitcoin-transfer-amount"
+                  inputMode="decimal"
+                  value={amount}
+                  placeholder="0.001"
+                  onChange={(event) => { setAmount(event.target.value); resetTransfer(); }}
+                />
+                <strong>BTC</strong>
+              </div>
+              <div className="transfer-cashback" aria-live="polite">
+                <span>{t("transfer.cashback")} <b>5 %</b></span>
+                <strong>{cashbackAmount ? `+${cashbackAmount} BTC` : "— BTC"}</strong>
+              </div>
+            </fieldset>
+            <button
+              className="prepare-transfer bitcoin-prepare"
+              type="button"
+              disabled={!amountIsValid || status !== "idle"}
+              onClick={() => void prepareBitcoinPayment()}
+            >
+              {status === "preparing"
+                ? t("transfer.bitcoinPreparing")
+                : <>{t("transfer.bitcoinPrepare")} <ArrowRightIcon /></>}
+            </button>
+            {error && <p className="transfer-error" role="alert">{error}</p>}
           </div>
+          <aside className="transfer-review">
+            <p className="micro-label">{t("transfer.receipt")}</p>
+            <dl>
+              <div><dt>{t("transfer.network")}</dt><dd>{t("transfer.bitcoinNetwork")}</dd></div>
+              <div><dt>{t("transfer.asset")}</dt><dd>BTC</dd></div>
+              <div><dt>{t("transfer.amount")}</dt><dd>{(bitcoinPayment?.amount ?? amount) || "—"} BTC</dd></div>
+              <div><dt>{t("transfer.destination")}</dt><dd>{bitcoinPayment ? short(bitcoinPayment.recipientAddress) : t("transfer.inWallet")}</dd></div>
+              {bitcoinPayment && <div><dt>{t("transfer.satoshis")}</dt><dd>{bitcoinPayment.amountSats}</dd></div>}
+              {bitcoinPayment && <div><dt>{t("transfer.request")}</dt><dd><code>{bitcoinPayment.requestId}</code></dd></div>}
+              <div><dt>{t("transfer.networkFees")}</dt><dd>{t("transfer.feesInWallet")}</dd></div>
+            </dl>
+            {bitcoinPayment && (
+              <div className="transfer-result bitcoin-result" role="status">
+                <strong>{t("transfer.bitcoinRequestReady")}</strong>
+                <code>{bitcoinPayment.recipientAddress}</code>
+                <a href={bitcoinPayment.paymentUri}>{t("transfer.bitcoinOpenWallet")} <ExternalLinkIcon /></a>
+                <p>{t("transfer.bitcoinApproval")}</p>
+                <button type="button" onClick={() => { setAmount(""); resetTransfer(); }}>{t("transfer.new")}</button>
+              </div>
+            )}
+          </aside>
         </div>
       ) : !account ? (
         <div className="mainnet-connect">

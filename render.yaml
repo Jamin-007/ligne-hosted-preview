@@ -12,3 +12,5 @@ services:
         sync: false
       - key: MAINNET_RECEIVER_ADDRESS
         sync: false
+      - key: BITCOIN_RECEIVER_ADDRESS
+        sync: false

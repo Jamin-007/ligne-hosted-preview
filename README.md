@@ -6,12 +6,12 @@ currency and receiving funds through local payment methods.
 ## Supported assets
 
 - ETH, USDC and USDT on Ethereum Mainnet
-- BTC as a network-separated preview flow pending a configured Bitcoin
-  receiving address and compatible wallet connector
+- BTC on Bitcoin Mainnet through a server-prepared BIP-321 payment request
 
-The Ethereum transfer flow prepares transactions server-side and leaves final
-review and signing to the connected wallet. Runtime receiver addresses and
-WalletConnect configuration are never committed.
+The transfer flows prepare requests server-side and leave final review and
+approval to the user's wallet. BTC requests use a native `bitcoin:` URI and an
+exact satoshi amount; they never pass through the Ethereum endpoint. Runtime
+receiver addresses and WalletConnect configuration are never committed.
 
 ## Local development
 
@@ -23,8 +23,9 @@ pnpm run dev
 pnpm run test
 ```
 
-Create a private `.dev.vars` file with `REOWN_PROJECT_ID` and
-`MAINNET_RECEIVER_ADDRESS` for local runtime configuration. Never commit it.
+Create a private `.dev.vars` file with `REOWN_PROJECT_ID`,
+`MAINNET_RECEIVER_ADDRESS` and `BITCOIN_RECEIVER_ADDRESS` for local runtime
+configuration. Never commit it.
 
 ## Privacy and deployment
 
@@ -33,5 +34,5 @@ Runtime values are managed by the hosting environment.
 
 The repository includes a Render Blueprint in `render.yaml`. It builds with
 pnpm, starts the vinext production server and checks `/api/v1/health`.
-Configure `REOWN_PROJECT_ID` and `MAINNET_RECEIVER_ADDRESS` in Render; never
-commit their values.
+Configure `REOWN_PROJECT_ID`, `MAINNET_RECEIVER_ADDRESS` and
+`BITCOIN_RECEIVER_ADDRESS` in Render; never commit their values.

@@ -3,9 +3,12 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const TEST_RECEIVER_ADDRESS = "0x2222222222222222222222222222222222222222";
+const TEST_BITCOIN_ADDRESS = "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu";
 
-async function requestWorker(pathname, init = {}) {
+async function requestWorker(pathname, init = {}, envOverrides = {}) {
   process.env.MAINNET_RECEIVER_ADDRESS = TEST_RECEIVER_ADDRESS;
+  process.env.BITCOIN_RECEIVER_ADDRESS = envOverrides.BITCOIN_RECEIVER_ADDRESS
+    ?? TEST_BITCOIN_ADDRESS;
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${pathname}`);
   const { default: worker } = await import(workerUrl.href);
@@ -14,6 +17,8 @@ async function requestWorker(pathname, init = {}) {
     {
       ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
       MAINNET_RECEIVER_ADDRESS: TEST_RECEIVER_ADDRESS,
+      BITCOIN_RECEIVER_ADDRESS: TEST_BITCOIN_ADDRESS,
+      ...envOverrides,
     },
     { waitUntil() {}, passThroughOnException() {} },
   );
@@ -122,7 +127,9 @@ test("prepares ETH, USDC and USDT transfers for wallet signature", async () => {
   assert.match(client, /symbol: "BTC"/);
   assert.match(client, /symbol: "USDT"/);
   assert.doesNotMatch(client, /<small>/);
-  assert.match(client, /transfer\.bitcoinPreviewText/);
+  assert.match(client, /api\/v1\/bitcoin\/transfer-requests/);
+  assert.match(client, /transfer\.bitcoinOpenWallet/);
+  assert.match(client, /href=\{bitcoinPayment\.paymentUri\}/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
   assert.match(translations, /"transfer\.submit": "Vérifier dans mon wallet"/);
   assert.match(translations, /"transfer\.confirmWallet": "Confirmez dans votre wallet/);
@@ -161,6 +168,62 @@ test("builds an Ethereum Mainnet USDT request and keeps BTC out of the EVM endpo
     }),
   });
   assert.equal(btc.status, 400);
+});
+
+test("serves the configured Bitcoin Mainnet deposit address", async () => {
+  const response = await requestWorker("/api/v1/bitcoin/deposit-address");
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.address, TEST_BITCOIN_ADDRESS);
+  assert.equal(body.data.asset, "BTC");
+  assert.equal(body.data.chain, "bitcoin");
+  assert.equal(body.data.chain_id, "bip122:000000000019d6689c085ae165831e93");
+  assert.equal(body.data.mode, "MAINNET");
+});
+
+test("prepares a native Bitcoin payment with an exact satoshi amount", async () => {
+  const response = await requestWorker("/api/v1/bitcoin/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ amount: "0.00012345" }),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.asset, "BTC");
+  assert.equal(body.data.amount, "0.00012345");
+  assert.equal(body.data.amount_sats, "12345");
+  assert.equal(body.data.recipient_address, TEST_BITCOIN_ADDRESS);
+  assert.equal(
+    body.data.payment_uri,
+    `bitcoin:${TEST_BITCOIN_ADDRESS}?amount=0.00012345&label=Ligne`,
+  );
+  assert.deepEqual(body.data.wallet_request, {
+    method: "sendTransfer",
+    params: { amount: "12345", recipientAddress: TEST_BITCOIN_ADDRESS },
+  });
+  assert.match(body.data.request_id, /^btc_/);
+});
+
+test("rejects unsafe BTC precision and an invalid configured Bitcoin address", async () => {
+  const overPrecise = await requestWorker("/api/v1/bitcoin/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ amount: "0.000000001" }),
+  });
+  assert.equal(overPrecise.status, 400);
+  assert.equal((await overPrecise.json()).error.code, "INVALID_AMOUNT");
+
+  const invalidReceiver = await requestWorker(
+    "/api/v1/bitcoin/transfer-requests",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ amount: "0.01" }),
+    },
+    { BITCOIN_RECEIVER_ADDRESS: "bc1-not-a-valid-address" },
+  );
+  assert.equal(invalidReceiver.status, 503);
+  assert.equal((await invalidReceiver.json()).error.code, "INVALID_BITCOIN_RECEIVER_ADDRESS");
 });
 
 test("prepares transactions from server-only receiver configuration", async () => {
