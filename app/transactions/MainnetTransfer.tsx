@@ -46,7 +46,7 @@ type BitcoinAppKit = {
     callback: (state: BitcoinAccountState) => void,
     namespace: "bip122",
   ): () => void;
-  subscribeProviders(callback: () => void): () => void;
+  subscribeProviders(callback: (providers: Record<string, unknown>) => void): () => void;
 };
 
 type Receipt = {
@@ -162,6 +162,9 @@ function messageFor(error: unknown, t: (key: TranslationKey) => string) {
   if (/invalid_bitcoin_account|bitcoin_wallet_unavailable/.test(message)) {
     return t("error.bitcoinWallet");
   }
+  if (message.includes("bitcoin_account_unavailable")) {
+    return t("error.bitcoinAccountUnavailable");
+  }
   if (/failed to fetch|networkerror|wallet_config_unavailable/.test(message)) {
     return t("error.service");
   }
@@ -175,6 +178,7 @@ export function MainnetTransfer() {
   const bitcoinUnsubscribeRef = useRef<(() => void) | null>(null);
   const [account, setAccount] = useState<`0x${string}`>();
   const [bitcoinAccount, setBitcoinAccount] = useState<string>();
+  const [bitcoinWalletConnected, setBitcoinWalletConnected] = useState(false);
   const [asset, setAsset] = useState<SelectableAsset>("USDT");
   const [amount, setAmount] = useState("");
   const [prepared, setPrepared] = useState<PreparedTransfer>();
@@ -212,6 +216,10 @@ export function MainnetTransfer() {
     modal: BitcoinAppKit,
     state = modal.getAccount("bip122"),
   ) {
+    if (state?.isConnected || state?.status === "connected") {
+      setBitcoinWalletConnected(true);
+    }
+
     const stateAddress = state?.address
       ?? state?.allAccounts?.find((item) => item.type === "payment")?.address
       ?? state?.allAccounts?.find((item) => item.namespace === "bip122")?.address
@@ -240,6 +248,7 @@ export function MainnetTransfer() {
     }
 
     if (state?.status === "disconnected") {
+      setBitcoinWalletConnected(false);
       setBitcoinAccount(undefined);
       sessionStorage.removeItem("ligne.bitcoin.address");
     }
@@ -248,8 +257,12 @@ export function MainnetTransfer() {
 
   async function prepareBitcoinPayment() {
     const bitcoinProvider = bitcoinAppKitRef.current?.getProvider<BitcoinWalletProvider>("bip122");
-    if (asset !== "BTC" || !bitcoinAccount || !bitcoinProvider) {
+    if (asset !== "BTC" || !bitcoinWalletConnected) {
       setError(t("error.bitcoinWallet"));
+      return;
+    }
+    if (!bitcoinAccount || !bitcoinProvider) {
+      setError(t("error.bitcoinAccountUnavailable"));
       return;
     }
     setStatus("preparing");
@@ -308,7 +321,10 @@ export function MainnetTransfer() {
       const unsubscribeAccount = modal.subscribeAccount((next) => {
         void syncBitcoinAccount(modal, next);
       }, "bip122");
-      const unsubscribeProviders = modal.subscribeProviders(() => {
+      const unsubscribeProviders = modal.subscribeProviders((providers) => {
+        if (providers.bip122 && modal.getAccount("bip122")?.isConnected) {
+          setBitcoinWalletConnected(true);
+        }
         void syncBitcoinAccount(modal);
       });
       bitcoinUnsubscribeRef.current = () => {
@@ -471,7 +487,7 @@ export function MainnetTransfer() {
         </div>
       </div>
 
-      {asset === "BTC" && !bitcoinAccount ? (
+      {asset === "BTC" && !bitcoinWalletConnected ? (
         <div className="mainnet-connect bitcoin-connect">
           <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
           <button className="connect-wallet-cta" type="button" onClick={() => void connectBitcoin()} disabled={status === "connecting"}>
@@ -482,7 +498,10 @@ export function MainnetTransfer() {
       ) : asset === "BTC" ? (
         <div className="transfer-grid bitcoin-transfer-grid">
           <div className="transfer-form">
-            <div className="connected-sender"><span>{t("transfer.sender")}</span><strong>{bitcoinAccount ? short(bitcoinAccount) : ""}</strong></div>
+            <div className="connected-sender">
+              <span>{t("transfer.sender")}</span>
+              <strong>{bitcoinAccount ? short(bitcoinAccount) : t("transfer.bitcoinConnected")}</strong>
+            </div>
             <div className="bitcoin-transfer-intro">
               <Image src="/wallet-assets/btc.svg" alt="" width={54} height={54} />
               <div>
@@ -508,11 +527,14 @@ export function MainnetTransfer() {
                 <strong>{cashbackAmount ? `+${cashbackAmount} BTC` : "— BTC"}</strong>
               </div>
             </fieldset>
+            {!bitcoinAccount && (
+              <p className="transfer-error" role="alert">{t("error.bitcoinAccountUnavailable")}</p>
+            )}
             {!bitcoinTxId && (
               <button
                 className="prepare-transfer bitcoin-prepare"
                 type="button"
-                disabled={!amountIsValid || status !== "idle"}
+                disabled={!amountIsValid || !bitcoinAccount || status !== "idle"}
                 onClick={() => void prepareBitcoinPayment()}
               >
                 {status === "preparing"

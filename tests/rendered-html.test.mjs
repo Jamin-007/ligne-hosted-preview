@@ -135,6 +135,9 @@ test("prepares ETH, USDC and USDT transfers for wallet signature", async () => {
   assert.match(client, /item\.type === "payment"/);
   assert.match(client, /syncBitcoinAccount\(modal/);
   assert.match(client, /subscribeProviders/);
+  assert.match(client, /bitcoinWalletConnected/);
+  assert.match(client, /error\.bitcoinAccountUnavailable/);
+  assert.match(client, /asset === "BTC" && !bitcoinWalletConnected/);
   assert.match(client, /bitcoinProvider\.sendTransfer/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
   assert.match(translations, /"transfer\.submit": "Vérifier dans mon wallet"/);
