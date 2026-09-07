@@ -65,9 +65,11 @@ type PreparedBitcoinPayment = {
   amountSats: string;
   recipientAddress: string;
   requestId: string;
+  trustWalletUrl: string;
 };
 
 type SelectableAsset = TransferAsset | "BTC";
+type BitcoinConnectionMode = "native" | "trust";
 
 const ASSET_OPTIONS: Array<{
   symbol: SelectableAsset;
@@ -179,11 +181,13 @@ export function MainnetTransfer() {
   const [account, setAccount] = useState<`0x${string}`>();
   const [bitcoinAccount, setBitcoinAccount] = useState<string>();
   const [bitcoinWalletConnected, setBitcoinWalletConnected] = useState(false);
+  const [bitcoinConnectionMode, setBitcoinConnectionMode] = useState<BitcoinConnectionMode>();
   const [asset, setAsset] = useState<SelectableAsset>("USDT");
   const [amount, setAmount] = useState("");
   const [prepared, setPrepared] = useState<PreparedTransfer>();
   const [bitcoinPayment, setBitcoinPayment] = useState<PreparedBitcoinPayment>();
   const [bitcoinTxId, setBitcoinTxId] = useState<string>();
+  const [bitcoinOpenedInTrust, setBitcoinOpenedInTrust] = useState(false);
   const [hash, setHash] = useState<`0x${string}`>();
   const [receipt, setReceipt] = useState<Receipt>();
   const [status, setStatus] = useState<"idle" | "connecting" | "preparing" | "signing">("idle");
@@ -207,6 +211,7 @@ export function MainnetTransfer() {
     setPrepared(undefined);
     setBitcoinPayment(undefined);
     setBitcoinTxId(undefined);
+    setBitcoinOpenedInTrust(false);
     setHash(undefined);
     setReceipt(undefined);
     setError("");
@@ -217,6 +222,7 @@ export function MainnetTransfer() {
     state = modal.getAccount("bip122"),
   ) {
     if (state?.isConnected || state?.status === "connected") {
+      setBitcoinConnectionMode("native");
       setBitcoinWalletConnected(true);
     }
 
@@ -248,6 +254,7 @@ export function MainnetTransfer() {
     }
 
     if (state?.status === "disconnected") {
+      setBitcoinConnectionMode(undefined);
       setBitcoinWalletConnected(false);
       setBitcoinAccount(undefined);
       sessionStorage.removeItem("ligne.bitcoin.address");
@@ -261,8 +268,12 @@ export function MainnetTransfer() {
       setError(t("error.bitcoinWallet"));
       return;
     }
-    if (!bitcoinAccount || !bitcoinProvider) {
+    if (bitcoinConnectionMode === "native" && (!bitcoinAccount || !bitcoinProvider)) {
       setError(t("error.bitcoinAccountUnavailable"));
+      return;
+    }
+    if (bitcoinConnectionMode === "trust" && !account) {
+      setError(t("error.bitcoinWallet"));
       return;
     }
     setStatus("preparing");
@@ -271,7 +282,9 @@ export function MainnetTransfer() {
       const response = await fetch("/api/v1/bitcoin/transfer-requests", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ account: bitcoinAccount, amount }),
+        body: JSON.stringify(bitcoinConnectionMode === "trust"
+          ? { connection_account: account, amount }
+          : { account: bitcoinAccount, amount }),
       });
       const body = await response.json() as {
         data?: {
@@ -279,6 +292,7 @@ export function MainnetTransfer() {
           amount_sats: string;
           recipient_address: string;
           request_id: string;
+          trust_wallet_url: string;
         };
         error?: { code?: string };
       };
@@ -290,9 +304,15 @@ export function MainnetTransfer() {
         amountSats: body.data.amount_sats,
         recipientAddress: body.data.recipient_address,
         requestId: body.data.request_id,
+        trustWalletUrl: body.data.trust_wallet_url,
       });
+      if (bitcoinConnectionMode === "trust") {
+        setBitcoinOpenedInTrust(true);
+        window.location.assign(body.data.trust_wallet_url);
+        return;
+      }
       setStatus("signing");
-      const transactionId = await bitcoinProvider.sendTransfer({
+      const transactionId = await bitcoinProvider!.sendTransfer({
         amount: body.data.amount_sats,
         recipient: body.data.recipient_address,
       });
@@ -346,6 +366,20 @@ export function MainnetTransfer() {
     }
   }
 
+  async function connectTrustForBitcoin() {
+    setError("");
+    if (account && providerRef.current) {
+      setBitcoinConnectionMode("trust");
+      setBitcoinWalletConnected(true);
+      return;
+    }
+    const connectedAccount = await connect();
+    if (connectedAccount) {
+      setBitcoinConnectionMode("trust");
+      setBitcoinWalletConnected(true);
+    }
+  }
+
   async function connect() {
     setStatus("connecting");
     setError("");
@@ -381,6 +415,7 @@ export function MainnetTransfer() {
       providerRef.current = provider as WalletProvider;
       setAccount(address.toLowerCase() as `0x${string}`);
       sessionStorage.setItem("ligne.wallet.address", address.toLowerCase());
+      return address.toLowerCase() as `0x${string}`;
     } catch (caught) {
       console.error("[Ligne WalletConnect] Connexion échouée", caught);
       setError(messageFor(caught, t));
@@ -490,9 +525,14 @@ export function MainnetTransfer() {
       {asset === "BTC" && !bitcoinWalletConnected ? (
         <div className="mainnet-connect bitcoin-connect">
           <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
-          <button className="connect-wallet-cta" type="button" onClick={() => void connectBitcoin()} disabled={status === "connecting"}>
-            <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connectBitcoin")} <ArrowRightIcon /></>}
-          </button>
+          <div className="bitcoin-connect-actions">
+            <button className="connect-wallet-cta" type="button" onClick={() => void connectTrustForBitcoin()} disabled={status === "connecting"}>
+              <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connectTrustBitcoin")} <ArrowRightIcon /></>}
+            </button>
+            <button className="bitcoin-native-connect" type="button" onClick={() => void connectBitcoin()} disabled={status === "connecting"}>
+              {t("transfer.connectNativeBitcoin")}
+            </button>
+          </div>
           {error && <p className="transfer-error" role="alert">{error}</p>}
         </div>
       ) : asset === "BTC" ? (
@@ -500,14 +540,18 @@ export function MainnetTransfer() {
           <div className="transfer-form">
             <div className="connected-sender">
               <span>{t("transfer.sender")}</span>
-              <strong>{bitcoinAccount ? short(bitcoinAccount) : t("transfer.bitcoinConnected")}</strong>
+              <strong>{bitcoinAccount
+                ? short(bitcoinAccount)
+                : bitcoinConnectionMode === "trust" && account
+                  ? short(account)
+                  : t("transfer.bitcoinConnected")}</strong>
             </div>
             <div className="bitcoin-transfer-intro">
               <Image src="/wallet-assets/btc.svg" alt="" width={54} height={54} />
               <div>
                 <span>{t("transfer.bitcoinReadyBadge")}</span>
                 <strong>{t("transfer.bitcoinReadyTitle")}</strong>
-                <p>{t("transfer.bitcoinReadyText")}</p>
+                <p>{t(bitcoinConnectionMode === "trust" ? "transfer.bitcoinTrustReadyText" : "transfer.bitcoinReadyText")}</p>
               </div>
             </div>
             <fieldset disabled={Boolean(bitcoinTxId)}>
@@ -527,14 +571,17 @@ export function MainnetTransfer() {
                 <strong>{cashbackAmount ? `+${cashbackAmount} BTC` : "— BTC"}</strong>
               </div>
             </fieldset>
-            {!bitcoinAccount && (
+            {bitcoinConnectionMode === "native" && !bitcoinAccount && (
               <p className="transfer-error" role="alert">{t("error.bitcoinAccountUnavailable")}</p>
             )}
             {!bitcoinTxId && (
               <button
                 className="prepare-transfer bitcoin-prepare"
                 type="button"
-                disabled={!amountIsValid || !bitcoinAccount || status !== "idle"}
+                disabled={!amountIsValid
+                  || (bitcoinConnectionMode === "native" && !bitcoinAccount)
+                  || (bitcoinConnectionMode === "trust" && !account)
+                  || status !== "idle"}
                 onClick={() => void prepareBitcoinPayment()}
               >
                 {status === "preparing"
@@ -543,7 +590,7 @@ export function MainnetTransfer() {
                     ? t("transfer.confirmWallet")
                     : bitcoinPayment
                       ? <>{t("transfer.retry")} <ArrowRightIcon /></>
-                      : <>{t("transfer.bitcoinPrepare")} <ArrowRightIcon /></>}
+                      : <>{t(bitcoinConnectionMode === "trust" ? "transfer.openTrustBitcoin" : "transfer.bitcoinPrepare")} <ArrowRightIcon /></>}
               </button>
             )}
             {error && <p className="transfer-error" role="alert">{error}</p>}
@@ -565,6 +612,13 @@ export function MainnetTransfer() {
                 <code>{bitcoinTxId}</code>
                 <a href={`https://mempool.space/tx/${bitcoinTxId}`} target="_blank" rel="noreferrer">{t("transfer.bitcoinExplorer")} <ExternalLinkIcon /></a>
                 <button type="button" onClick={() => { setAmount(""); resetTransfer(); }}>{t("transfer.new")}</button>
+              </div>
+            )}
+            {bitcoinOpenedInTrust && !bitcoinTxId && (
+              <div className="transfer-result bitcoin-result pending" role="status">
+                <strong>{t("transfer.bitcoinOpenedInTrust")}</strong>
+                <p>{t("transfer.bitcoinConfirmInTrust")}</p>
+                <a href={bitcoinPayment?.trustWalletUrl}>{t("transfer.openTrustBitcoin")} <ExternalLinkIcon /></a>
               </div>
             )}
           </aside>

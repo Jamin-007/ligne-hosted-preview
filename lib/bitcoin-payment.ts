@@ -19,6 +19,7 @@ export type BitcoinPaymentRequest = {
   amountSats: string;
   paymentUri: string;
   recipientAddress: string;
+  trustWalletUrl: string;
   walletRequest: {
     method: "sendTransfer";
     params: {
@@ -169,12 +170,18 @@ export async function buildBitcoinPaymentRequest(
   const parsed = parseBitcoinAmount(amount);
   const amountSats = parsed.satoshis.toString();
   const paymentUri = `bitcoin:${recipientAddress}?amount=${parsed.normalized}&label=Ligne`;
+  const trustWalletParameters = new URLSearchParams({
+    asset: "c0",
+    address: recipientAddress,
+    amount: parsed.normalized,
+  });
 
   return {
     amount: parsed.normalized,
     amountSats,
     paymentUri,
     recipientAddress,
+    trustWalletUrl: `https://link.trustwallet.com/send?${trustWalletParameters.toString()}`,
     walletRequest: {
       method: "sendTransfer",
       params: { amount: amountSats, recipient: recipientAddress },

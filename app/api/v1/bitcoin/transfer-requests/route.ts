@@ -7,6 +7,7 @@ import { getRuntimeEnv } from "@/lib/runtime-env";
 
 type BitcoinTransferRequestBody = {
   account?: unknown;
+  connection_account?: unknown;
   amount?: unknown;
 };
 
@@ -23,8 +24,15 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json() as BitcoinTransferRequestBody;
-    if (typeof body.account !== "string" || !await isValidBitcoinMainnetAddress(body.account)) {
+    const nativeBitcoinAccount = typeof body.account === "string"
+      && await isValidBitcoinMainnetAddress(body.account);
+    const walletConnectionAccount = typeof body.connection_account === "string"
+      && /^0x[0-9a-fA-F]{40}$/.test(body.connection_account);
+    if (body.account !== undefined && !nativeBitcoinAccount) {
       return json({ error: { code: "INVALID_BITCOIN_ACCOUNT", message: "Wallet Bitcoin Mainnet invalide." } }, 400);
+    }
+    if (!nativeBitcoinAccount && !walletConnectionAccount) {
+      return json({ error: { code: "BITCOIN_WALLET_UNAVAILABLE", message: "Connexion wallet requise." } }, 400);
     }
     if (typeof body.amount !== "string") {
       return json({ error: { code: "INVALID_AMOUNT", message: "Montant BTC requis." } }, 400);
@@ -40,9 +48,12 @@ export async function POST(request: Request) {
         asset: "BTC",
         amount: payment.amount,
         amount_sats: payment.amountSats,
-        sender_address: body.account.trim(),
+        ...(nativeBitcoinAccount
+          ? { sender_address: (body.account as string).trim() }
+          : { connection_account: (body.connection_account as string).toLowerCase() }),
         recipient_address: payment.recipientAddress,
         payment_uri: payment.paymentUri,
+        trust_wallet_url: payment.trustWalletUrl,
         wallet_request: payment.walletRequest,
       },
     });
