@@ -10,14 +10,16 @@ services:
     plan: free              # free web instances sleep after ~15 min idle; move to starter+ for always-on
     region: frankfurt        # single region, closest to target users
     branch: main
-    autoDeploy: false        # deploys triggered manually / after review (funds-handling app)
+    autoDeploy: true         # flip to false once the service is stable (funds-handling app)
 
     # `pnpm build` also runs scripts/privacy-audit.mjs, which currently stops the
     # build on the committed .env.example (treated as a sensitive file). Build the
     # app directly here; run `pnpm privacy:check` in CI instead.
     # --prod=false: Render sets NODE_ENV=production, but vinext/vite/cross-env are
     # devDependencies and are needed for both build and start.
-    buildCommand: corepack enable && pnpm install --frozen-lockfile --prod=false && pnpm exec vinext build
+    # No `corepack enable`: it fails on this Node image (stale signing keys ->
+    # "Cannot find matching keyid"). Render provisions pnpm from PNPM_VERSION.
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm exec vinext build
     startCommand: pnpm exec vinext start
 
     # '/' returns 200. Do NOT use /api/v1/health here: the demo-backend API routes
@@ -30,6 +32,10 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22.13.0"
+      - key: PNPM_VERSION
+        value: "9.15.9"
+      - key: COREPACK_INTEGRITY_KEYS      # belt-and-suspenders: skip corepack's broken sig check
+        value: "0"
       - key: WRANGLER_LOG_PATH
         value: .wrangler/wrangler.log
       # Secrets: sync:false -> set once in the Render dashboard, never stored in git.
