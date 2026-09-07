@@ -18,6 +18,25 @@ type WalletProvider = {
   request<T = unknown>(args: { method: string; params?: unknown[] }): Promise<T>;
 };
 
+type BitcoinWalletProvider = {
+  sendTransfer(params: { amount: string; recipient: string }): Promise<string>;
+};
+
+type BitcoinAccountState = {
+  address?: string;
+  isConnected: boolean;
+};
+
+type BitcoinAppKit = {
+  getAccount(namespace: "bip122"): BitcoinAccountState | undefined;
+  getProvider<T>(namespace: "bip122"): T | undefined;
+  open(options: { namespace: "bip122"; view: "Connect" }): Promise<unknown>;
+  subscribeAccount(
+    callback: (state: BitcoinAccountState) => void,
+    namespace: "bip122",
+  ): () => void;
+};
+
 type Receipt = {
   blockNumber: string;
   status: "0x0" | "0x1";
@@ -32,7 +51,6 @@ type PreparedTransfer = {
 type PreparedBitcoinPayment = {
   amount: string;
   amountSats: string;
-  paymentUri: string;
   recipientAddress: string;
   requestId: string;
 };
@@ -50,6 +68,35 @@ const ASSET_OPTIONS: Array<{
 ];
 
 const CASHBACK_PERCENT = 5n;
+
+let bitcoinAppKitPromise: Promise<BitcoinAppKit> | undefined;
+
+async function getBitcoinAppKit(projectId: string) {
+  if (!bitcoinAppKitPromise) {
+    bitcoinAppKitPromise = Promise.all([
+      import("@reown/appkit"),
+      import("@reown/appkit-adapter-bitcoin"),
+      import("@reown/appkit/networks"),
+    ]).then(([{ createAppKit }, { BitcoinAdapter }, { bitcoin }]) => createAppKit({
+      adapters: [new BitcoinAdapter({ projectId })],
+      networks: [bitcoin],
+      defaultNetwork: bitcoin,
+      defaultAccountTypes: { bip122: "payment" },
+      projectId,
+      metadata: {
+        name: "Ligne",
+        description: "Transfert BTC non dépositaire sur Bitcoin Mainnet.",
+        url: window.location.origin,
+        icons: [],
+      },
+      features: { analytics: false, email: false, socials: [] },
+    }) as unknown as BitcoinAppKit).catch((error) => {
+      bitcoinAppKitPromise = undefined;
+      throw error;
+    });
+  }
+  return bitcoinAppKitPromise;
+}
 
 function short(address: string) {
   return `${address.slice(0, 8)}…${address.slice(-6)}`;
@@ -100,6 +147,9 @@ function messageFor(error: unknown, t: (key: TranslationKey) => string) {
   if (/bitcoin_receiver_unavailable|invalid_bitcoin_receiver_address/.test(message)) {
     return t("error.bitcoinConfig");
   }
+  if (/invalid_bitcoin_account|bitcoin_wallet_unavailable/.test(message)) {
+    return t("error.bitcoinWallet");
+  }
   if (/failed to fetch|networkerror|wallet_config_unavailable/.test(message)) {
     return t("error.service");
   }
@@ -109,11 +159,15 @@ function messageFor(error: unknown, t: (key: TranslationKey) => string) {
 export function MainnetTransfer() {
   const { t } = useLanguage();
   const providerRef = useRef<WalletProvider | null>(null);
+  const bitcoinAppKitRef = useRef<BitcoinAppKit | null>(null);
+  const bitcoinUnsubscribeRef = useRef<(() => void) | null>(null);
   const [account, setAccount] = useState<`0x${string}`>();
+  const [bitcoinAccount, setBitcoinAccount] = useState<string>();
   const [asset, setAsset] = useState<SelectableAsset>("USDT");
   const [amount, setAmount] = useState("");
   const [prepared, setPrepared] = useState<PreparedTransfer>();
   const [bitcoinPayment, setBitcoinPayment] = useState<PreparedBitcoinPayment>();
+  const [bitcoinTxId, setBitcoinTxId] = useState<string>();
   const [hash, setHash] = useState<`0x${string}`>();
   const [receipt, setReceipt] = useState<Receipt>();
   const [status, setStatus] = useState<"idle" | "connecting" | "preparing" | "signing">("idle");
@@ -136,26 +190,30 @@ export function MainnetTransfer() {
   function resetTransfer() {
     setPrepared(undefined);
     setBitcoinPayment(undefined);
+    setBitcoinTxId(undefined);
     setHash(undefined);
     setReceipt(undefined);
     setError("");
   }
 
   async function prepareBitcoinPayment() {
-    if (asset !== "BTC") return;
+    const bitcoinProvider = bitcoinAppKitRef.current?.getProvider<BitcoinWalletProvider>("bip122");
+    if (asset !== "BTC" || !bitcoinAccount || !bitcoinProvider) {
+      setError(t("error.bitcoinWallet"));
+      return;
+    }
     setStatus("preparing");
     setError("");
     try {
       const response = await fetch("/api/v1/bitcoin/transfer-requests", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ account: bitcoinAccount, amount }),
       });
       const body = await response.json() as {
         data?: {
           amount: string;
           amount_sats: string;
-          payment_uri: string;
           recipient_address: string;
           request_id: string;
         };
@@ -167,12 +225,48 @@ export function MainnetTransfer() {
       setBitcoinPayment({
         amount: body.data.amount,
         amountSats: body.data.amount_sats,
-        paymentUri: body.data.payment_uri,
         recipientAddress: body.data.recipient_address,
         requestId: body.data.request_id,
       });
+      setStatus("signing");
+      const transactionId = await bitcoinProvider.sendTransfer({
+        amount: body.data.amount_sats,
+        recipient: body.data.recipient_address,
+      });
+      if (!transactionId) throw new Error("BITCOIN_TRANSACTION_FAILED");
+      setBitcoinTxId(transactionId);
     } catch (caught) {
       console.error("[Ligne Bitcoin] Échec de la préparation", caught);
+      setError(messageFor(caught, t));
+    } finally {
+      setStatus("idle");
+    }
+  }
+
+  async function connectBitcoin() {
+    setStatus("connecting");
+    setError("");
+    try {
+      const configResponse = await fetch("/api/v1/wallet-config", { cache: "no-store" });
+      if (!configResponse.ok) throw new Error("WALLET_CONFIG_UNAVAILABLE");
+      const config = await configResponse.json() as { projectId?: string };
+      if (!config.projectId) throw new Error("WALLET_CONFIG_UNAVAILABLE");
+
+      const modal = await getBitcoinAppKit(config.projectId);
+      bitcoinAppKitRef.current = modal;
+      bitcoinUnsubscribeRef.current?.();
+      bitcoinUnsubscribeRef.current = modal.subscribeAccount((next) => {
+        setBitcoinAccount(next.isConnected ? next.address : undefined);
+      }, "bip122");
+
+      const current = modal.getAccount("bip122");
+      if (current?.isConnected && current.address) {
+        setBitcoinAccount(current.address);
+        return;
+      }
+      await modal.open({ view: "Connect", namespace: "bip122" });
+    } catch (caught) {
+      console.error("[Ligne Bitcoin] Connexion wallet échouée", caught);
       setError(messageFor(caught, t));
     } finally {
       setStatus("idle");
@@ -290,6 +384,8 @@ export function MainnetTransfer() {
     };
   }, [hash, receipt]);
 
+  useEffect(() => () => bitcoinUnsubscribeRef.current?.(), []);
+
   return (
     <section className="real-transfer" aria-labelledby="real-transfer-title">
       <div className="real-transfer-heading">
@@ -318,9 +414,18 @@ export function MainnetTransfer() {
         </div>
       </div>
 
-      {asset === "BTC" ? (
+      {asset === "BTC" && !bitcoinAccount ? (
+        <div className="mainnet-connect bitcoin-connect">
+          <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
+          <button className="connect-wallet-cta" type="button" onClick={() => void connectBitcoin()} disabled={status === "connecting"}>
+            <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connectBitcoin")} <ArrowRightIcon /></>}
+          </button>
+          {error && <p className="transfer-error" role="alert">{error}</p>}
+        </div>
+      ) : asset === "BTC" ? (
         <div className="transfer-grid bitcoin-transfer-grid">
           <div className="transfer-form">
+            <div className="connected-sender"><span>{t("transfer.sender")}</span><strong>{bitcoinAccount ? short(bitcoinAccount) : ""}</strong></div>
             <div className="bitcoin-transfer-intro">
               <Image src="/wallet-assets/btc.svg" alt="" width={54} height={54} />
               <div>
@@ -329,7 +434,7 @@ export function MainnetTransfer() {
                 <p>{t("transfer.bitcoinReadyText")}</p>
               </div>
             </div>
-            <fieldset>
+            <fieldset disabled={Boolean(bitcoinTxId)}>
               <label htmlFor="bitcoin-transfer-amount">{t("transfer.amount")}</label>
               <div className="mainnet-amount">
                 <input
@@ -346,16 +451,22 @@ export function MainnetTransfer() {
                 <strong>{cashbackAmount ? `+${cashbackAmount} BTC` : "— BTC"}</strong>
               </div>
             </fieldset>
-            <button
-              className="prepare-transfer bitcoin-prepare"
-              type="button"
-              disabled={!amountIsValid || status !== "idle"}
-              onClick={() => void prepareBitcoinPayment()}
-            >
-              {status === "preparing"
-                ? t("transfer.bitcoinPreparing")
-                : <>{t("transfer.bitcoinPrepare")} <ArrowRightIcon /></>}
-            </button>
+            {!bitcoinTxId && (
+              <button
+                className="prepare-transfer bitcoin-prepare"
+                type="button"
+                disabled={!amountIsValid || status !== "idle"}
+                onClick={() => void prepareBitcoinPayment()}
+              >
+                {status === "preparing"
+                  ? t("transfer.bitcoinPreparing")
+                  : status === "signing"
+                    ? t("transfer.confirmWallet")
+                    : bitcoinPayment
+                      ? <>{t("transfer.retry")} <ArrowRightIcon /></>
+                      : <>{t("transfer.bitcoinPrepare")} <ArrowRightIcon /></>}
+              </button>
+            )}
             {error && <p className="transfer-error" role="alert">{error}</p>}
           </div>
           <aside className="transfer-review">
@@ -369,12 +480,11 @@ export function MainnetTransfer() {
               {bitcoinPayment && <div><dt>{t("transfer.request")}</dt><dd><code>{bitcoinPayment.requestId}</code></dd></div>}
               <div><dt>{t("transfer.networkFees")}</dt><dd>{t("transfer.feesInWallet")}</dd></div>
             </dl>
-            {bitcoinPayment && (
-              <div className="transfer-result bitcoin-result" role="status">
-                <strong>{t("transfer.bitcoinRequestReady")}</strong>
-                <code>{bitcoinPayment.recipientAddress}</code>
-                <a href={bitcoinPayment.paymentUri}>{t("transfer.bitcoinOpenWallet")} <ExternalLinkIcon /></a>
-                <p>{t("transfer.bitcoinApproval")}</p>
+            {bitcoinTxId && (
+              <div className="transfer-result bitcoin-result success" role="status">
+                <strong>{t("transfer.bitcoinSent")}</strong>
+                <code>{bitcoinTxId}</code>
+                <a href={`https://mempool.space/tx/${bitcoinTxId}`} target="_blank" rel="noreferrer">{t("transfer.bitcoinExplorer")} <ExternalLinkIcon /></a>
                 <button type="button" onClick={() => { setAmount(""); resetTransfer(); }}>{t("transfer.new")}</button>
               </div>
             )}

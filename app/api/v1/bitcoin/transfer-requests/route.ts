@@ -1,10 +1,12 @@
 import {
   BITCOIN_MAINNET_CAIP2,
   buildBitcoinPaymentRequest,
+  isValidBitcoinMainnetAddress,
 } from "@/lib/bitcoin-payment";
 import { getRuntimeEnv } from "@/lib/runtime-env";
 
 type BitcoinTransferRequestBody = {
+  account?: unknown;
   amount?: unknown;
 };
 
@@ -21,6 +23,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json() as BitcoinTransferRequestBody;
+    if (typeof body.account !== "string" || !await isValidBitcoinMainnetAddress(body.account)) {
+      return json({ error: { code: "INVALID_BITCOIN_ACCOUNT", message: "Wallet Bitcoin Mainnet invalide." } }, 400);
+    }
     if (typeof body.amount !== "string") {
       return json({ error: { code: "INVALID_AMOUNT", message: "Montant BTC requis." } }, 400);
     }
@@ -35,6 +40,7 @@ export async function POST(request: Request) {
         asset: "BTC",
         amount: payment.amount,
         amount_sats: payment.amountSats,
+        sender_address: body.account.trim(),
         recipient_address: payment.recipientAddress,
         payment_uri: payment.paymentUri,
         wallet_request: payment.walletRequest,

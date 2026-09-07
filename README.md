@@ -8,10 +8,11 @@ currency and receiving funds through local payment methods.
 - ETH, USDC and USDT on Ethereum Mainnet
 - BTC on Bitcoin Mainnet through a server-prepared BIP-321 payment request
 
-The transfer flows prepare requests server-side and leave final review and
-approval to the user's wallet. BTC requests use a native `bitcoin:` URI and an
-exact satoshi amount; they never pass through the Ethereum endpoint. Runtime
-receiver addresses and WalletConnect configuration are never committed.
+The transfer flows require a wallet connection, prepare requests server-side
+and leave final review and approval to the user's wallet. BTC uses the Reown
+Bitcoin adapter with an exact satoshi amount; it never passes through the
+Ethereum endpoint. Runtime receiver addresses and WalletConnect configuration
+are never committed.
 
 ## Local development
 

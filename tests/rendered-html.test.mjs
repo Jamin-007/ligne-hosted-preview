@@ -128,8 +128,10 @@ test("prepares ETH, USDC and USDT transfers for wallet signature", async () => {
   assert.match(client, /symbol: "USDT"/);
   assert.doesNotMatch(client, /<small>/);
   assert.match(client, /api\/v1\/bitcoin\/transfer-requests/);
-  assert.match(client, /transfer\.bitcoinOpenWallet/);
-  assert.match(client, /href=\{bitcoinPayment\.paymentUri\}/);
+  assert.match(client, /async function connectBitcoin/);
+  assert.match(client, /@reown\/appkit-adapter-bitcoin/);
+  assert.match(client, /getProvider<BitcoinWalletProvider>\("bip122"\)/);
+  assert.match(client, /bitcoinProvider\.sendTransfer/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
   assert.match(translations, /"transfer\.submit": "Vérifier dans mon wallet"/);
   assert.match(translations, /"transfer\.confirmWallet": "Confirmez dans votre wallet/);
@@ -185,7 +187,7 @@ test("prepares a native Bitcoin payment with an exact satoshi amount", async () 
   const response = await requestWorker("/api/v1/bitcoin/transfer-requests", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ amount: "0.00012345" }),
+    body: JSON.stringify({ account: TEST_BITCOIN_ADDRESS, amount: "0.00012345" }),
   });
   assert.equal(response.status, 200);
   const body = await response.json();
@@ -199,16 +201,24 @@ test("prepares a native Bitcoin payment with an exact satoshi amount", async () 
   );
   assert.deepEqual(body.data.wallet_request, {
     method: "sendTransfer",
-    params: { amount: "12345", recipientAddress: TEST_BITCOIN_ADDRESS },
+    params: { amount: "12345", recipient: TEST_BITCOIN_ADDRESS },
   });
   assert.match(body.data.request_id, /^btc_/);
 });
 
 test("rejects unsafe BTC precision and an invalid configured Bitcoin address", async () => {
+  const invalidAccount = await requestWorker("/api/v1/bitcoin/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ account: "0x-not-a-bitcoin-wallet", amount: "0.01" }),
+  });
+  assert.equal(invalidAccount.status, 400);
+  assert.equal((await invalidAccount.json()).error.code, "INVALID_BITCOIN_ACCOUNT");
+
   const overPrecise = await requestWorker("/api/v1/bitcoin/transfer-requests", {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ amount: "0.000000001" }),
+    body: JSON.stringify({ account: TEST_BITCOIN_ADDRESS, amount: "0.000000001" }),
   });
   assert.equal(overPrecise.status, 400);
   assert.equal((await overPrecise.json()).error.code, "INVALID_AMOUNT");
@@ -218,7 +228,7 @@ test("rejects unsafe BTC precision and an invalid configured Bitcoin address", a
     {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ amount: "0.01" }),
+      body: JSON.stringify({ account: TEST_BITCOIN_ADDRESS, amount: "0.01" }),
     },
     { BITCOIN_RECEIVER_ADDRESS: "bc1-not-a-valid-address" },
   );

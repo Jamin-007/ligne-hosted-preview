@@ -16,6 +16,8 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@reown/appkit": "1.8.23",
+    "@reown/appkit-adapter-bitcoin": "1.8.23",
     "@walletconnect/ethereum-provider": "2.21.1",
     "cryptocurrency-icons": "^0.18.1",
     "drizzle-orm": "0.45.2",

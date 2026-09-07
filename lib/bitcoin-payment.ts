@@ -23,7 +23,7 @@ export type BitcoinPaymentRequest = {
     method: "sendTransfer";
     params: {
       amount: string;
-      recipientAddress: string;
+      recipient: string;
     };
   };
 };
@@ -115,7 +115,8 @@ function decodeBase58(value: string) {
 }
 
 async function sha256(value: Uint8Array) {
-  return new Uint8Array(await crypto.subtle.digest("SHA-256", value));
+  const bytes = Uint8Array.from(value);
+  return new Uint8Array(await crypto.subtle.digest("SHA-256", bytes.buffer));
 }
 
 async function isValidBase58MainnetAddress(address: string) {
@@ -176,7 +177,7 @@ export async function buildBitcoinPaymentRequest(
     recipientAddress,
     walletRequest: {
       method: "sendTransfer",
-      params: { amount: amountSats, recipientAddress },
+      params: { amount: amountSats, recipient: recipientAddress },
     },
   };
 }
