@@ -5,8 +5,8 @@ import { createContext, useContext, useEffect, useMemo, useState, type ReactNode
 export type Language = "fr" | "en";
 
 const fr = {
-  "header.realTransactions": "Transactions réelles",
-  "header.realValue": "Valeur réelle",
+  "header.supportedAssets": "Actifs pris en charge",
+  "header.explicitNetworks": "Réseaux séparés",
   "header.getStarted": "Commencer",
   "home.mainnetAvailable": "Crypto → monnaie locale",
   "home.heroTitle": "L’argent numérique,",
@@ -186,8 +186,8 @@ const fr = {
 export type TranslationKey = keyof typeof fr;
 
 const en: Record<TranslationKey, string> = {
-  "header.realTransactions": "Real transactions",
-  "header.realValue": "Real value",
+  "header.supportedAssets": "Supported assets",
+  "header.explicitNetworks": "Network-aware",
   "header.getStarted": "Get started",
   "home.mainnetAvailable": "Crypto → local currency",
   "home.heroTitle": "Digital money,",

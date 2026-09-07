@@ -42,11 +42,19 @@ test("renders the conversion preview", async () => {
   const html = await response.text();
   assert.match(html, /Bitcoin \+ Ethereum Mainnet/);
   assert.match(html, /BTC · ETH · USDT · USDC/);
-  assert.match(html, /Valeur réelle/);
+  assert.match(html, /Réseaux séparés/);
   assert.match(html, /Où souhaitez-vous recevoir votre argent/);
   assert.match(html, /Choisissez un pays pour continuer/);
   assert.doesNotMatch(html, /Connecter avec WalletConnect/);
   assert.doesNotMatch(html, /Tester le pipeline serveur/);
+});
+
+test("serves a Render-compatible health check", async () => {
+  const response = await requestWorker("/api/v1/health");
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.status, "ok");
+  assert.deepEqual(body.assets, ["BTC", "ETH", "USDT", "USDC"]);
 });
 
 test("uses reliable document navigation for internal calls to action", async () => {

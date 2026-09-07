@@ -28,6 +28,10 @@ Create a private `.dev.vars` file with `REOWN_PROJECT_ID` and
 
 ## Privacy and deployment
 
-`pnpm run build` runs privacy checks before and after the Sites build. The
-deployment definition lives in `.openai/hosting.json`; runtime values are
-managed by the hosting environment.
+`pnpm run build` runs privacy checks before and after the production build.
+Runtime values are managed by the hosting environment.
+
+The repository includes a Render Blueprint in `render.yaml`. It builds with
+pnpm, starts the vinext production server and checks `/api/v1/health`.
+Configure `REOWN_PROJECT_ID` and `MAINNET_RECEIVER_ADDRESS` in Render; never
+commit their values.
