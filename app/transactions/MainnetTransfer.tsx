@@ -10,7 +10,7 @@ import {
   type MainnetTransactionRequest,
   type TransferAsset,
 } from "@/lib/mainnet-transfer";
-import { parseBitcoinAmount } from "@/lib/bitcoin-payment";
+import { isValidBitcoinMainnetAddress, parseBitcoinAmount } from "@/lib/bitcoin-payment";
 
 type WalletProvider = {
   accounts: string[];
@@ -19,15 +19,26 @@ type WalletProvider = {
 };
 
 type BitcoinWalletProvider = {
+  getAccountAddresses(): Promise<Array<{
+    address: string;
+    purpose?: "payment" | "ordinal" | "stx";
+  }>>;
   sendTransfer(params: { amount: string; recipient: string }): Promise<string>;
 };
 
 type BitcoinAccountState = {
   address?: string;
+  allAccounts?: Array<{
+    address: string;
+    namespace?: string;
+    type?: "payment" | "ordinal" | "stx";
+  }>;
   isConnected: boolean;
+  status?: "connecting" | "connected" | "disconnected" | "reconnecting";
 };
 
 type BitcoinAppKit = {
+  getAddress(namespace: "bip122"): string | undefined;
   getAccount(namespace: "bip122"): BitcoinAccountState | undefined;
   getProvider<T>(namespace: "bip122"): T | undefined;
   open(options: { namespace: "bip122"; view: "Connect" }): Promise<unknown>;
@@ -35,6 +46,7 @@ type BitcoinAppKit = {
     callback: (state: BitcoinAccountState) => void,
     namespace: "bip122",
   ): () => void;
+  subscribeProviders(callback: () => void): () => void;
 };
 
 type Receipt = {
@@ -196,6 +208,44 @@ export function MainnetTransfer() {
     setError("");
   }
 
+  async function syncBitcoinAccount(
+    modal: BitcoinAppKit,
+    state = modal.getAccount("bip122"),
+  ) {
+    const stateAddress = state?.address
+      ?? state?.allAccounts?.find((item) => item.type === "payment")?.address
+      ?? state?.allAccounts?.find((item) => item.namespace === "bip122")?.address
+      ?? modal.getAddress("bip122");
+
+    if (stateAddress && await isValidBitcoinMainnetAddress(stateAddress)) {
+      setBitcoinAccount(stateAddress);
+      sessionStorage.setItem("ligne.bitcoin.address", stateAddress);
+      return true;
+    }
+
+    const provider = modal.getProvider<BitcoinWalletProvider>("bip122");
+    if (provider?.getAccountAddresses) {
+      try {
+        const accounts = await provider.getAccountAddresses();
+        const paymentAccount = accounts.find((item) => item.purpose === "payment")
+          ?? accounts[0];
+        if (paymentAccount && await isValidBitcoinMainnetAddress(paymentAccount.address)) {
+          setBitcoinAccount(paymentAccount.address);
+          sessionStorage.setItem("ligne.bitcoin.address", paymentAccount.address);
+          return true;
+        }
+      } catch {
+        // Certains connecteurs ne proposent que l'adresse active via AppKit.
+      }
+    }
+
+    if (state?.status === "disconnected") {
+      setBitcoinAccount(undefined);
+      sessionStorage.removeItem("ligne.bitcoin.address");
+    }
+    return false;
+  }
+
   async function prepareBitcoinPayment() {
     const bitcoinProvider = bitcoinAppKitRef.current?.getProvider<BitcoinWalletProvider>("bip122");
     if (asset !== "BTC" || !bitcoinAccount || !bitcoinProvider) {
@@ -255,16 +305,23 @@ export function MainnetTransfer() {
       const modal = await getBitcoinAppKit(config.projectId);
       bitcoinAppKitRef.current = modal;
       bitcoinUnsubscribeRef.current?.();
-      bitcoinUnsubscribeRef.current = modal.subscribeAccount((next) => {
-        setBitcoinAccount(next.isConnected ? next.address : undefined);
+      const unsubscribeAccount = modal.subscribeAccount((next) => {
+        void syncBitcoinAccount(modal, next);
       }, "bip122");
+      const unsubscribeProviders = modal.subscribeProviders(() => {
+        void syncBitcoinAccount(modal);
+      });
+      bitcoinUnsubscribeRef.current = () => {
+        unsubscribeAccount();
+        unsubscribeProviders();
+      };
 
       const current = modal.getAccount("bip122");
-      if (current?.isConnected && current.address) {
-        setBitcoinAccount(current.address);
+      if (await syncBitcoinAccount(modal, current)) {
         return;
       }
       await modal.open({ view: "Connect", namespace: "bip122" });
+      await syncBitcoinAccount(modal);
     } catch (caught) {
       console.error("[Ligne Bitcoin] Connexion wallet échouée", caught);
       setError(messageFor(caught, t));

@@ -131,6 +131,10 @@ test("prepares ETH, USDC and USDT transfers for wallet signature", async () => {
   assert.match(client, /async function connectBitcoin/);
   assert.match(client, /@reown\/appkit-adapter-bitcoin/);
   assert.match(client, /getProvider<BitcoinWalletProvider>\("bip122"\)/);
+  assert.match(client, /getAccountAddresses\(\)/);
+  assert.match(client, /item\.type === "payment"/);
+  assert.match(client, /syncBitcoinAccount\(modal/);
+  assert.match(client, /subscribeProviders/);
   assert.match(client, /bitcoinProvider\.sendTransfer/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
   assert.match(translations, /"transfer\.submit": "Vérifier dans mon wallet"/);
