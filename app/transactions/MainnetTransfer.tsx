@@ -33,12 +33,11 @@ type SelectableAsset = TransferAsset | "BTC";
 const ASSET_OPTIONS: Array<{
   symbol: SelectableAsset;
   icon: string;
-  network: "bitcoin" | "ethereum";
 }> = [
-  { symbol: "BTC", icon: "/wallet-assets/btc.svg", network: "bitcoin" },
-  { symbol: "ETH", icon: "/wallet-assets/eth.svg", network: "ethereum" },
-  { symbol: "USDT", icon: "/wallet-assets/usdt.svg", network: "ethereum" },
-  { symbol: "USDC", icon: "/wallet-assets/usdc.svg", network: "ethereum" },
+  { symbol: "BTC", icon: "/wallet-assets/btc.svg" },
+  { symbol: "ETH", icon: "/wallet-assets/eth.svg" },
+  { symbol: "USDT", icon: "/wallet-assets/usdt.svg" },
+  { symbol: "USDC", icon: "/wallet-assets/usdc.svg" },
 ];
 
 const CASHBACK_PERCENT = 5n;
@@ -258,10 +257,7 @@ export function MainnetTransfer() {
               onClick={() => { setAsset(option.symbol); setAmount(""); resetTransfer(); }}
             >
               <Image src={option.icon} alt="" width={30} height={30} />
-              <span>
-                <strong>{option.symbol}</strong>
-                <small>{t(option.network === "bitcoin" ? "transfer.bitcoinNetwork" : "transfer.ethereumNetwork")}</small>
-              </span>
+              <strong>{option.symbol}</strong>
             </button>
           ))}
         </div>
