@@ -24,7 +24,7 @@ pnpm run dev
 pnpm run test
 ```
 
-Create a private `.dev.vars` file with `REOWN_PROJECT_ID`,
+Create a private `.env` file with `REOWN_PROJECT_ID`,
 `MAINNET_RECEIVER_ADDRESS` and `BITCOIN_RECEIVER_ADDRESS` for local runtime
 configuration. Never commit it.
 
