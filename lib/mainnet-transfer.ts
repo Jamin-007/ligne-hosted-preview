@@ -12,8 +12,11 @@ export const ETHEREUM_MAINNET_CHAIN_HEX = "0x1";
 export const MAINNET_USDC_ADDRESS = getAddress(
   "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
 );
+export const MAINNET_USDT_ADDRESS = getAddress(
+  "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+);
 
-export type TransferAsset = "ETH" | "USDC";
+export type TransferAsset = "ETH" | "USDC" | "USDT";
 
 export type MainnetTransactionRequest = {
   from: `0x${string}`;
@@ -31,7 +34,9 @@ const erc20TransferAbi = [
       { name: "to", type: "address" },
       { name: "value", type: "uint256" },
     ],
-    outputs: [{ name: "", type: "bool" }],
+    // Return values do not affect calldata encoding. Keeping this empty also
+    // matches legacy tokens such as Ethereum Mainnet USDT.
+    outputs: [],
   },
 ] as const;
 
@@ -66,9 +71,13 @@ export function buildMainnetTransaction(
     };
   }
 
+  const tokenAddress = asset === "USDT"
+    ? MAINNET_USDT_ADDRESS
+    : MAINNET_USDC_ADDRESS;
+
   return {
     from,
-    to: MAINNET_USDC_ADDRESS,
+    to: tokenAddress,
     value: "0x0",
     data: encodeFunctionData({
       abi: erc20TransferAbi,

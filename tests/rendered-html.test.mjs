@@ -3,8 +3,12 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 
 const TEST_RECEIVER_ADDRESS = "0x2222222222222222222222222222222222222222";
+const TEST_BITCOIN_ADDRESS = "bc1qcr8te4kr609gcawutmrza0j4xv80jy8z306fyu";
 
-async function requestWorker(pathname, init = {}) {
+async function requestWorker(pathname, init = {}, envOverrides = {}) {
+  process.env.MAINNET_RECEIVER_ADDRESS = TEST_RECEIVER_ADDRESS;
+  process.env.BITCOIN_RECEIVER_ADDRESS = envOverrides.BITCOIN_RECEIVER_ADDRESS
+    ?? TEST_BITCOIN_ADDRESS;
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${pathname}`);
   const { default: worker } = await import(workerUrl.href);
@@ -13,6 +17,8 @@ async function requestWorker(pathname, init = {}) {
     {
       ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) },
       MAINNET_RECEIVER_ADDRESS: TEST_RECEIVER_ADDRESS,
+      BITCOIN_RECEIVER_ADDRESS: TEST_BITCOIN_ADDRESS,
+      ...envOverrides,
     },
     { waitUntil() {}, passThroughOnException() {} },
   );
@@ -39,12 +45,21 @@ test("renders the conversion preview", async () => {
   const response = await render("/transactions");
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /ETH \+ USDC · Ethereum Mainnet/);
-  assert.match(html, /Valeur réelle/);
+  assert.match(html, /Bitcoin \+ Ethereum Mainnet/);
+  assert.match(html, /BTC · ETH · USDT · USDC/);
+  assert.match(html, /Réseaux séparés/);
   assert.match(html, /Où souhaitez-vous recevoir votre argent/);
   assert.match(html, /Choisissez un pays pour continuer/);
   assert.doesNotMatch(html, /Connecter avec WalletConnect/);
   assert.doesNotMatch(html, /Tester le pipeline serveur/);
+});
+
+test("serves a Render-compatible health check", async () => {
+  const response = await requestWorker("/api/v1/health");
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.status, "ok");
+  assert.deepEqual(body.assets, ["BTC", "ETH", "USDT", "USDC"]);
 });
 
 test("uses reliable document navigation for internal calls to action", async () => {
@@ -76,11 +91,12 @@ test("loads the receiving address from runtime configuration", async () => {
   assert.match(route, /chain_id:\s*1/);
   assert.doesNotMatch(transfer, /MAINNET_RECEIVER_ADDRESS\s*=\s*getAddress/);
   assert.match(transfer, /0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/);
+  assert.match(transfer, /0xdAC17F958D2ee523a2206206994597C13D831ec7/);
   assert.doesNotMatch(route, /PRIVATE_KEY|SEED_PHRASE/);
   assert.doesNotMatch(transfer, /PRIVATE_KEY|SEED_PHRASE/);
 });
 
-test("prepares ETH and USDC transfers for wallet signature", async () => {
+test("prepares ETH, USDC and USDT transfers for wallet signature", async () => {
   const transfer = await readFile(
     new URL("../lib/mainnet-transfer.ts", import.meta.url),
     "utf8",
@@ -95,6 +111,8 @@ test("prepares ETH and USDC transfers for wallet signature", async () => {
   );
   assert.match(transfer, /parseEther/);
   assert.match(transfer, /parseUnits\(normalized, 6\)/);
+  assert.match(transfer, /"ETH" \| "USDC" \| "USDT"/);
+  assert.match(transfer, /MAINNET_USDT_ADDRESS/);
   assert.match(transfer, /functionName: "transfer"/);
   assert.match(client, /async function submitAndSign/);
   assert.doesNotMatch(client, /method: "eth_estimateGas"/);
@@ -106,8 +124,26 @@ test("prepares ETH and USDC transfers for wallet signature", async () => {
   assert.match(client, /CASHBACK_PERCENT = 5n/);
   assert.match(client, /t\("transfer\.cashback"\)/);
   assert.match(client, /calculateCashback\(amount\)/);
+  assert.match(client, /symbol: "BTC"/);
+  assert.match(client, /symbol: "USDT"/);
+  assert.doesNotMatch(client, /<small>/);
+  assert.match(client, /api\/v1\/bitcoin\/transfer-requests/);
+  assert.match(client, /async function connectBitcoin/);
+  assert.match(client, /@reown\/appkit-adapter-bitcoin/);
+  assert.match(client, /getProvider<BitcoinWalletProvider>\("bip122"\)/);
+  assert.match(client, /getAccountAddresses\(\)/);
+  assert.match(client, /item\.type === "payment"/);
+  assert.match(client, /syncBitcoinAccount\(modal/);
+  assert.match(client, /subscribeProviders/);
+  assert.match(client, /bitcoinWalletConnected/);
+  assert.match(client, /error\.bitcoinAccountUnavailable/);
+  assert.match(client, /asset === "BTC" && !bitcoinWalletConnected/);
+  assert.match(client, /bitcoinProvider!\.sendTransfer/);
+  assert.match(client, /connectTrustForBitcoin/);
+  assert.match(client, /connection_account: account/);
+  assert.match(client, /window\.location\.assign\(body\.data\.trust_wallet_url\)/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
-  assert.match(translations, /"transfer\.submit": "Soumettre et signer"/);
+  assert.match(translations, /"transfer\.submit": "Vérifier dans mon wallet"/);
   assert.match(translations, /"transfer\.confirmWallet": "Confirmez dans votre wallet/);
   assert.match(translations, /"transfer\.cashback": "Cashback estimé"/);
   const server = await readFile(
@@ -116,6 +152,121 @@ test("prepares ETH and USDC transfers for wallet signature", async () => {
   );
   assert.match(server, /buildMainnetTransaction/);
   assert.match(server, /request_id/);
+});
+
+test("builds an Ethereum Mainnet USDT request and keeps BTC out of the EVM endpoint", async () => {
+  const usdt = await requestWorker("/api/v1/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      account: "0x1111111111111111111111111111111111111111",
+      asset: "USDT",
+      amount: "12.34",
+    }),
+  });
+  assert.equal(usdt.status, 200);
+  const usdtBody = await usdt.json();
+  assert.equal(usdtBody.data.asset, "USDT");
+  assert.equal(usdtBody.data.transaction.to.toLowerCase(), "0xdac17f958d2ee523a2206206994597c13d831ec7");
+  assert.match(usdtBody.data.transaction.data, /^0xa9059cbb/);
+
+  const btc = await requestWorker("/api/v1/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      account: "0x1111111111111111111111111111111111111111",
+      asset: "BTC",
+      amount: "0.01",
+    }),
+  });
+  assert.equal(btc.status, 400);
+});
+
+test("serves the configured Bitcoin Mainnet deposit address", async () => {
+  const response = await requestWorker("/api/v1/bitcoin/deposit-address");
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.address, TEST_BITCOIN_ADDRESS);
+  assert.equal(body.data.asset, "BTC");
+  assert.equal(body.data.chain, "bitcoin");
+  assert.equal(body.data.chain_id, "bip122:000000000019d6689c085ae165831e93");
+  assert.equal(body.data.mode, "MAINNET");
+});
+
+test("prepares a native Bitcoin payment with an exact satoshi amount", async () => {
+  const response = await requestWorker("/api/v1/bitcoin/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ account: TEST_BITCOIN_ADDRESS, amount: "0.00012345" }),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.asset, "BTC");
+  assert.equal(body.data.amount, "0.00012345");
+  assert.equal(body.data.amount_sats, "12345");
+  assert.equal(body.data.recipient_address, TEST_BITCOIN_ADDRESS);
+  assert.equal(
+    body.data.payment_uri,
+    `bitcoin:${TEST_BITCOIN_ADDRESS}?amount=0.00012345&label=Ligne`,
+  );
+  assert.equal(
+    body.data.trust_wallet_url,
+    `https://link.trustwallet.com/send?asset=c0&address=${TEST_BITCOIN_ADDRESS}&amount=0.00012345`,
+  );
+  assert.deepEqual(body.data.wallet_request, {
+    method: "sendTransfer",
+    params: { amount: "12345", recipient: TEST_BITCOIN_ADDRESS },
+  });
+  assert.match(body.data.request_id, /^btc_/);
+});
+
+test("prepares a Trust Wallet Bitcoin mobile payment after wallet connection", async () => {
+  const response = await requestWorker("/api/v1/bitcoin/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      connection_account: "0x1111111111111111111111111111111111111111",
+      amount: "0.001",
+    }),
+  });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.amount_sats, "100000");
+  assert.equal(body.data.connection_account, "0x1111111111111111111111111111111111111111");
+  assert.equal(
+    body.data.trust_wallet_url,
+    `https://link.trustwallet.com/send?asset=c0&address=${TEST_BITCOIN_ADDRESS}&amount=0.001`,
+  );
+});
+
+test("rejects unsafe BTC precision and an invalid configured Bitcoin address", async () => {
+  const invalidAccount = await requestWorker("/api/v1/bitcoin/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ account: "0x-not-a-bitcoin-wallet", amount: "0.01" }),
+  });
+  assert.equal(invalidAccount.status, 400);
+  assert.equal((await invalidAccount.json()).error.code, "INVALID_BITCOIN_ACCOUNT");
+
+  const overPrecise = await requestWorker("/api/v1/bitcoin/transfer-requests", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ account: TEST_BITCOIN_ADDRESS, amount: "0.000000001" }),
+  });
+  assert.equal(overPrecise.status, 400);
+  assert.equal((await overPrecise.json()).error.code, "INVALID_AMOUNT");
+
+  const invalidReceiver = await requestWorker(
+    "/api/v1/bitcoin/transfer-requests",
+    {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ account: TEST_BITCOIN_ADDRESS, amount: "0.01" }),
+    },
+    { BITCOIN_RECEIVER_ADDRESS: "bc1-not-a-valid-address" },
+  );
+  assert.equal(invalidReceiver.status, 503);
+  assert.equal((await invalidReceiver.json()).error.code, "INVALID_BITCOIN_RECEIVER_ADDRESS");
 });
 
 test("prepares transactions from server-only receiver configuration", async () => {

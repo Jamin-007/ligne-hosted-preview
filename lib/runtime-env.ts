@@ -2,10 +2,14 @@
 // which doesn't exist as a real module under plain Node (e.g. `vinext start` on Render).
 // Fall back to `process.env` there so the same route works on both runtimes.
 export async function getRuntimeEnv(): Promise<Record<string, string | undefined>> {
+  const nodeEnv = typeof process === "undefined" ? {} : process.env;
   try {
     const cf = await import("cloudflare:workers");
-    return cf.env as unknown as Record<string, string | undefined>;
+    return {
+      ...nodeEnv,
+      ...cf.env as unknown as Record<string, string | undefined>,
+    };
   } catch {
-    return process.env;
+    return nodeEnv;
   }
 }

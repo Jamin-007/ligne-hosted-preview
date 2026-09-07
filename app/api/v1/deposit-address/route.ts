@@ -19,7 +19,7 @@ export async function GET() {
     {
       data: {
         address,
-        assets: ["ETH", "USDC"],
+        assets: ["ETH", "USDC", "USDT"],
         chain: "ethereum",
         chain_id: 1,
         mode: "MAINNET",

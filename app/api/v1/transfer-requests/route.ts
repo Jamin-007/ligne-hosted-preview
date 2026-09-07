@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     if (!body.account || !isAddress(body.account)) {
       return json({ error: { message: "Wallet émetteur invalide." } }, 400);
     }
-    if (body.asset !== "ETH" && body.asset !== "USDC") {
+    if (body.asset !== "ETH" && body.asset !== "USDC" && body.asset !== "USDT") {
       return json({ error: { message: "Actif non pris en charge." } }, 400);
     }
     if (!body.amount) {

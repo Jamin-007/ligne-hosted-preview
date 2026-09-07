@@ -1,40 +1,28 @@
 # render.yaml — Render Blueprint
 # Deploy: Render Dashboard -> New -> Blueprint -> pick this repo.
-# Minimal config to get the app online. Hardening (security headers, WAF,
-# rate limiting, paid plan, HA) is deferred to a follow-up.
+# Configuration unique du service relié au dépôt Jamin-007/ligne-hosted-preview.
 
 services:
   - type: web
     name: ligne-hosted-preview
     runtime: node
-    plan: free              # free web instances sleep after ~15 min idle; move to starter+ for always-on
-    region: frankfurt        # single region, closest to target users
+    plan: free
+    region: frankfurt
     branch: main
-    autoDeploy: true         # flip to false once the service is stable (funds-handling app)
+    autoDeploy: true
 
-    # `pnpm build` also runs scripts/privacy-audit.mjs, which currently stops the
-    # build on the committed .env.example (treated as a sensitive file). Build the
-    # app directly here; run `pnpm privacy:check` in CI instead.
-    # --prod=false: Render sets NODE_ENV=production, but vinext/vite/cross-env are
-    # devDependencies and are needed for both build and start.
-    # No `corepack enable`: it fails on this Node image (stale signing keys ->
-    # "Cannot find matching keyid"). Render provisions pnpm from PNPM_VERSION.
-    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm exec vinext build
-    startCommand: pnpm exec vinext start
-
-    # '/' returns 200. Do NOT use /api/v1/health here: the demo-backend API routes
-    # import `cloudflare:workers` (D1) which does not exist on a plain Node host,
-    # so they return 500 on Render. The site + WalletConnect + mainnet-transfer
-    # flow work; the D1-backed demo console does not. Full functionality needs a
-    # Cloudflare Workers deploy or a replacement database.
-    healthCheckPath: /
+    # Render fournit pnpm via PNPM_VERSION. Les dépendances de développement sont
+    # nécessaires à la compilation vinext et à l'audit de confidentialité.
+    buildCommand: pnpm install --frozen-lockfile --prod=false && pnpm run build
+    startCommand: pnpm start
+    healthCheckPath: /api/v1/health
 
     envVars:
       - key: NODE_VERSION
         value: "22.13.0"
       - key: PNPM_VERSION
-        value: "9.15.9"
-      - key: COREPACK_INTEGRITY_KEYS      # belt-and-suspenders: skip corepack's broken sig check
+        value: "11.19.0"
+      - key: COREPACK_INTEGRITY_KEYS
         value: "0"
       - key: WRANGLER_LOG_PATH
         value: .wrangler/wrangler.log
@@ -42,4 +30,6 @@ services:
       - key: REOWN_PROJECT_ID
         sync: false
       - key: MAINNET_RECEIVER_ADDRESS
+        sync: false
+      - key: BITCOIN_RECEIVER_ADDRESS
         sync: false
