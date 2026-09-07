@@ -10,6 +10,17 @@ const sourceRoots = ["app", "db", "lib", "public", "worker"];
 const sourceFiles = ["package.json", "vite.config.ts", "tsconfig.json", ".openai/hosting.json"];
 const outputRoots = ["dist"];
 const ignoredExtensions = new Set([".gif", ".ico", ".jpeg", ".jpg", ".png", ".webp", ".woff", ".woff2"]);
+const nonPersonalSystemIdentifiers = new Set([
+  "admin",
+  "node",
+  "nobody",
+  "render",
+  "root",
+  "runner",
+  "ubuntu",
+  "worker",
+  "www-data",
+]);
 
 function command(args) {
   try {
@@ -26,7 +37,10 @@ function localDenylist() {
   const remote = command(["remote", "get-url", "origin"]);
   const remoteOwner = remote.match(/(?:github\.com|gitlab\.com)[:/]([^/]+)\//i)?.[1];
   values.push(gitName, gitEmail, remoteOwner);
-  return values.filter((value) => typeof value === "string" && value.trim().length >= 4);
+  return values.filter((value) => {
+    if (typeof value !== "string" || value.trim().length < 4) return false;
+    return !nonPersonalSystemIdentifiers.has(value.trim().toLowerCase());
+  });
 }
 
 async function privateDenylist() {
