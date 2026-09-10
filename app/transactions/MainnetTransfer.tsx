@@ -77,8 +77,6 @@ const ASSET_OPTIONS: Array<{
 }> = [
   { symbol: "BTC", icon: "/wallet-assets/btc.svg" },
   { symbol: "ETH", icon: "/wallet-assets/eth.svg" },
-  { symbol: "USDT", icon: "/wallet-assets/usdt.svg" },
-  { symbol: "USDC", icon: "/wallet-assets/usdc.svg" },
 ];
 
 const CASHBACK_PERCENT = 5n;
@@ -182,7 +180,7 @@ export function MainnetTransfer() {
   const [bitcoinAccount, setBitcoinAccount] = useState<string>();
   const [bitcoinWalletConnected, setBitcoinWalletConnected] = useState(false);
   const [bitcoinConnectionMode, setBitcoinConnectionMode] = useState<BitcoinConnectionMode>();
-  const [asset, setAsset] = useState<SelectableAsset>("USDT");
+  const [asset, setAsset] = useState<SelectableAsset>("ETH");
   const [amount, setAmount] = useState("");
   const [prepared, setPrepared] = useState<PreparedTransfer>();
   const [bitcoinPayment, setBitcoinPayment] = useState<PreparedBitcoinPayment>();
@@ -404,7 +402,7 @@ export function MainnetTransfer() {
         events: ["chainChanged", "accountsChanged"],
         metadata: {
           name: "Ligne",
-          description: "Transfert non dépositaire ETH, USDT et USDC sur Ethereum Mainnet.",
+          description: "Transfert non dépositaire d’ETH sur Ethereum Mainnet.",
           url: window.location.origin,
           icons: [],
         },

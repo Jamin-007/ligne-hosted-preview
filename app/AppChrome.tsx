@@ -41,7 +41,7 @@ export function AppHeader({ active }: { active: ActivePage }) {
   return (
     <>
       <div className="trust-notice">
-        <span>{t("header.supportedAssets")}</span><strong>BTC · ETH · USDT · USDC</strong><span>{t("header.explicitNetworks")}</span>
+        <span>{t("header.supportedAssets")}</span><strong>BTC · ETH</strong><span>{t("header.explicitNetworks")}</span>
       </div>
       <header className="trust-header" data-page={active}>
         <div className="trust-shell trust-header-inner">

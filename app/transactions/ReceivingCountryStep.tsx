@@ -46,7 +46,6 @@ export function ReceivingCountryStep() {
   const connectWalletRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setPhoneVerified(false);
     if (!selectedCode) return;
     phoneStepRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [selectedCode]);
@@ -68,7 +67,10 @@ export function ReceivingCountryStep() {
               type="button"
               className={`receive-country-card${country.code === selectedCode ? " is-selected" : ""}`}
               aria-pressed={country.code === selectedCode}
-              onClick={() => setSelectedCode(country.code)}
+              onClick={() => {
+                setPhoneVerified(false);
+                setSelectedCode(country.code);
+              }}
             >
               {country.code === selectedCode && <i className="receive-country-check"><CheckIcon /></i>}
               <CountryFlag code={country.code} />

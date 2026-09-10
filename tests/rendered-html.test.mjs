@@ -46,7 +46,8 @@ test("renders the conversion preview", async () => {
   assert.equal(response.status, 200);
   const html = await response.text();
   assert.match(html, /Bitcoin \+ Ethereum Mainnet/);
-  assert.match(html, /BTC · ETH · USDT · USDC/);
+  assert.match(html, /BTC · ETH/);
+  assert.doesNotMatch(html, /USDT|USDC/);
   assert.match(html, /Réseaux séparés/);
   assert.match(html, /Où souhaitez-vous recevoir votre argent/);
   assert.match(html, /Choisissez un pays pour continuer/);
@@ -96,7 +97,7 @@ test("loads the receiving address from runtime configuration", async () => {
   assert.doesNotMatch(transfer, /PRIVATE_KEY|SEED_PHRASE/);
 });
 
-test("prepares ETH, USDC and USDT transfers for wallet signature", async () => {
+test("keeps token preparation server-side while the frontend exposes BTC and ETH", async () => {
   const transfer = await readFile(
     new URL("../lib/mainnet-transfer.ts", import.meta.url),
     "utf8",
@@ -125,7 +126,8 @@ test("prepares ETH, USDC and USDT transfers for wallet signature", async () => {
   assert.match(client, /t\("transfer\.cashback"\)/);
   assert.match(client, /calculateCashback\(amount\)/);
   assert.match(client, /symbol: "BTC"/);
-  assert.match(client, /symbol: "USDT"/);
+  assert.match(client, /symbol: "ETH"/);
+  assert.doesNotMatch(client, /symbol: "USDT"|symbol: "USDC"/);
   assert.doesNotMatch(client, /<small>/);
   assert.match(client, /api\/v1\/bitcoin\/transfer-requests/);
   assert.match(client, /async function connectBitcoin/);

@@ -5,7 +5,7 @@ currency and receiving funds through local payment methods.
 
 ## Supported assets
 
-- ETH, USDC and USDT on Ethereum Mainnet
+- ETH on Ethereum Mainnet
 - BTC on Bitcoin Mainnet through a server-prepared BIP-321 payment request
 
 The transfer flows require a wallet connection, prepare requests server-side

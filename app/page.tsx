@@ -151,14 +151,12 @@ export default function Home() {
               <div className="trust-asset-icons">
                 <Image src="/wallet-assets/eth.svg" alt="Ethereum" width={44} height={44} />
                 <Image src="/wallet-assets/btc.svg" alt="Bitcoin" width={44} height={44} />
-                <Image src="/wallet-assets/usdt.svg" alt="Tether" width={44} height={44} />
-                <Image src="/wallet-assets/usdc.svg" alt="USD Coin" width={44} height={44} />
               </div>
               <div><span>{t("home.nativeAsset")}</span><strong>{t("home.cryptoAssetsLabel")}</strong><small>{t("home.cryptoAssetsList")}</small></div>
             </article>
             <div className="trust-chain-badge"><span>{t("home.chainBadgeTop")}</span><i className="trust-chain-badge-icon"><SwapIcon /></i><small>{t("home.chainBadgeBottom")}</small></div>
-            <article className="trust-asset-card trust-asset-usdc">
-              <div className="trust-usdc-mark"><BanknoteIcon /></div>
+            <article className="trust-asset-card trust-asset-local">
+              <div className="trust-local-mark"><BanknoteIcon /></div>
               <div><span>{t("home.officialContract")}</span><strong>{t("home.localCurrenciesLabel")}</strong><small>{t("home.localCurrenciesList")}</small></div>
             </article>
           </div>

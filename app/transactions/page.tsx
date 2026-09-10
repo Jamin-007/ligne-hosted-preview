@@ -21,7 +21,7 @@ export default function Transactions() {
           </div>
           <div className="trust-app-hero-aside">
             <p>{t("transactions.lead")}</p>
-            <div className="trust-hero-facts"><span><NetworkIcon /> Bitcoin · Ethereum</span><span><LockIcon /> {t("transactions.localSignature")}</span><span><CheckIcon /> BTC · ETH · USDT · USDC</span></div>
+            <div className="trust-hero-facts"><span><NetworkIcon /> Bitcoin · Ethereum</span><span><LockIcon /> {t("transactions.localSignature")}</span><span><CheckIcon /> BTC · ETH</span></div>
           </div>
         </div>
       </section>
