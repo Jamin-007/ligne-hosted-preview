@@ -184,15 +184,18 @@ test("builds an Ethereum Mainnet USDT request and keeps BTC out of the EVM endpo
   assert.equal(btc.status, 400);
 });
 
-test("serves the configured Bitcoin Mainnet deposit address", async () => {
-  const response = await requestWorker("/api/v1/bitcoin/deposit-address");
-  assert.equal(response.status, 200);
-  const body = await response.json();
-  assert.equal(body.data.address, TEST_BITCOIN_ADDRESS);
-  assert.equal(body.data.asset, "BTC");
-  assert.equal(body.data.chain, "bitcoin");
-  assert.equal(body.data.chain_id, "bip122:000000000019d6689c085ae165831e93");
-  assert.equal(body.data.mode, "MAINNET");
+test("does not expose the Bitcoin receiver through a public address endpoint", async () => {
+  const route = await readFile(
+    new URL("../app/api/v1/deposit-address/route.ts", import.meta.url),
+    "utf8",
+  );
+  const client = await readFile(
+    new URL("../app/transactions/MainnetTransfer.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.doesNotMatch(route, /BITCOIN_RECEIVER_ADDRESS/);
+  assert.doesNotMatch(client, /bitcoin\/deposit-address|deposit-address\?asset=BTC/);
+  assert.doesNotMatch(client, /copyBitcoinAddress|bitcoin-deposit-address/);
 });
 
 test("prepares a native Bitcoin payment with an exact satoshi amount", async () => {
