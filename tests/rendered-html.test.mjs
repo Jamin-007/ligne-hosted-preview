@@ -110,6 +110,10 @@ test("keeps token preparation server-side while the frontend exposes BTC and ETH
     new URL("../app/LanguageProvider.tsx", import.meta.url),
     "utf8",
   );
+  const walletAppKit = await readFile(
+    new URL("../lib/wallet-appkit.ts", import.meta.url),
+    "utf8",
+  );
   assert.match(transfer, /parseEther/);
   assert.match(transfer, /parseUnits\(normalized, 6\)/);
   assert.match(transfer, /"ETH" \| "USDC" \| "USDT"/);
@@ -131,7 +135,8 @@ test("keeps token preparation server-side while the frontend exposes BTC and ETH
   assert.doesNotMatch(client, /<small>/);
   assert.match(client, /api\/v1\/bitcoin\/transfer-requests/);
   assert.match(client, /async function connectBitcoin/);
-  assert.match(client, /@reown\/appkit-adapter-bitcoin/);
+  assert.match(walletAppKit, /@reown\/appkit-adapter-bitcoin/);
+  assert.match(walletAppKit, /@reown\/appkit-adapter-wagmi/);
   assert.match(client, /getProvider<BitcoinWalletProvider>\("bip122"\)/);
   assert.match(client, /getAccountAddresses\(\)/);
   assert.match(client, /item\.type === "payment"/);
@@ -259,12 +264,15 @@ test("prepares transactions from server-only receiver configuration", async () =
   assert.doesNotMatch(server, new RegExp(TEST_RECEIVER_ADDRESS, "i"));
 });
 
-test("uses the Trust Wallet compatible optional namespace", async () => {
+test("uses one multichain AppKit instance for ETH and BTC", async () => {
   const source = await readFile(new URL("../app/WalletConnectCard.tsx", import.meta.url), "utf8");
-  assert.match(source, /optionalChains:\s*\[1\]/);
-  assert.match(source, /personal_sign/);
-  assert.match(source, /eth_sendTransaction/);
-  assert.doesNotMatch(source, /optionalMethods:[^\n]*eth_getBalance/);
+  const walletAppKit = await readFile(new URL("../lib/wallet-appkit.ts", import.meta.url), "utf8");
+  assert.match(source, /getWalletAppKit/);
+  assert.match(source, /namespace: "eip155"/);
+  assert.match(walletAppKit, /new WagmiAdapter/);
+  assert.match(walletAppKit, /new BitcoinAdapter/);
+  assert.match(walletAppKit, /networks: \[mainnet, bitcoin\]/);
+  assert.doesNotMatch(source, /@walletconnect\/ethereum-provider|EthereumProvider\.init/);
 });
 
 test("loads and displays the native balance after WalletConnect connects", async () => {

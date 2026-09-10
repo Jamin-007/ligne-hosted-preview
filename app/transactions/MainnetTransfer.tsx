@@ -11,12 +11,11 @@ import {
   type TransferAsset,
 } from "@/lib/mainnet-transfer";
 import { isValidBitcoinMainnetAddress, parseBitcoinAmount } from "@/lib/bitcoin-payment";
-
-type WalletProvider = {
-  accounts: string[];
-  connect(): Promise<void>;
-  request<T = unknown>(args: { method: string; params?: unknown[] }): Promise<T>;
-};
+import {
+  getWalletAppKit,
+  type WalletAppKit,
+  type WalletProvider,
+} from "@/lib/wallet-appkit";
 
 type BitcoinWalletProvider = {
   getAccountAddresses(): Promise<Array<{
@@ -26,28 +25,6 @@ type BitcoinWalletProvider = {
   sendTransfer(params: { amount: string; recipient: string }): Promise<string>;
 };
 
-type BitcoinAccountState = {
-  address?: string;
-  allAccounts?: Array<{
-    address: string;
-    namespace?: string;
-    type?: "payment" | "ordinal" | "stx";
-  }>;
-  isConnected: boolean;
-  status?: "connecting" | "connected" | "disconnected" | "reconnecting";
-};
-
-type BitcoinAppKit = {
-  getAddress(namespace: "bip122"): string | undefined;
-  getAccount(namespace: "bip122"): BitcoinAccountState | undefined;
-  getProvider<T>(namespace: "bip122"): T | undefined;
-  open(options: { namespace: "bip122"; view: "Connect" }): Promise<unknown>;
-  subscribeAccount(
-    callback: (state: BitcoinAccountState) => void,
-    namespace: "bip122",
-  ): () => void;
-  subscribeProviders(callback: (providers: Record<string, unknown>) => void): () => void;
-};
 
 type Receipt = {
   blockNumber: string;
@@ -78,35 +55,6 @@ const ASSET_OPTIONS: Array<{
 ];
 
 const CASHBACK_PERCENT = 5n;
-
-let bitcoinAppKitPromise: Promise<BitcoinAppKit> | undefined;
-
-async function getBitcoinAppKit(projectId: string) {
-  if (!bitcoinAppKitPromise) {
-    bitcoinAppKitPromise = Promise.all([
-      import("@reown/appkit"),
-      import("@reown/appkit-adapter-bitcoin"),
-      import("@reown/appkit/networks"),
-    ]).then(([{ createAppKit }, { BitcoinAdapter }, { bitcoin }]) => createAppKit({
-      adapters: [new BitcoinAdapter({ projectId })],
-      networks: [bitcoin],
-      defaultNetwork: bitcoin,
-      defaultAccountTypes: { bip122: "payment" },
-      projectId,
-      metadata: {
-        name: "Ligne",
-        description: "Transfert BTC non dépositaire sur Bitcoin Mainnet.",
-        url: window.location.origin,
-        icons: [],
-      },
-      features: { analytics: false, email: false, socials: [] },
-    }) as unknown as BitcoinAppKit).catch((error) => {
-      bitcoinAppKitPromise = undefined;
-      throw error;
-    });
-  }
-  return bitcoinAppKitPromise;
-}
 
 function short(address: string) {
   return `${address.slice(0, 8)}…${address.slice(-6)}`;
@@ -172,8 +120,8 @@ function messageFor(error: unknown, t: (key: TranslationKey) => string) {
 export function MainnetTransfer() {
   const { t } = useLanguage();
   const providerRef = useRef<WalletProvider | null>(null);
-  const bitcoinAppKitRef = useRef<BitcoinAppKit | null>(null);
-  const bitcoinUnsubscribeRef = useRef<(() => void) | null>(null);
+  const walletAppKitRef = useRef<WalletAppKit | null>(null);
+  const walletUnsubscribeRef = useRef<(() => void) | null>(null);
   const [account, setAccount] = useState<`0x${string}`>();
   const [bitcoinAccount, setBitcoinAccount] = useState<string>();
   const [bitcoinWalletConnected, setBitcoinWalletConnected] = useState(false);
@@ -211,7 +159,7 @@ export function MainnetTransfer() {
   }
 
   async function syncBitcoinAccount(
-    modal: BitcoinAppKit,
+    modal: WalletAppKit,
     state = modal.getAccount("bip122"),
   ) {
     if (state?.isConnected || state?.status === "connected") {
@@ -253,8 +201,52 @@ export function MainnetTransfer() {
     return false;
   }
 
+  function syncEthereumAccount(
+    modal: WalletAppKit,
+    state = modal.getAccount("eip155"),
+  ) {
+    const stateAddress = state?.address
+      ?? state?.allAccounts?.find((item) => item.namespace === "eip155")?.address
+      ?? modal.getAddress("eip155");
+    const provider = modal.getProvider<WalletProvider>("eip155");
+
+    if (stateAddress && /^0x[0-9a-fA-F]{40}$/.test(stateAddress) && provider) {
+      const normalized = stateAddress.toLowerCase() as `0x${string}`;
+      providerRef.current = provider;
+      setAccount(normalized);
+      sessionStorage.setItem("ligne.wallet.address", normalized);
+      return true;
+    }
+
+    if (state?.status === "disconnected") {
+      providerRef.current = null;
+      setAccount(undefined);
+      sessionStorage.removeItem("ligne.wallet.address");
+    }
+    return false;
+  }
+
+  function subscribeWalletState(modal: WalletAppKit) {
+    walletUnsubscribeRef.current?.();
+    const unsubscribeEthereum = modal.subscribeAccount((next) => {
+      syncEthereumAccount(modal, next);
+    }, "eip155");
+    const unsubscribeBitcoin = modal.subscribeAccount((next) => {
+      void syncBitcoinAccount(modal, next);
+    }, "bip122");
+    const unsubscribeProviders = modal.subscribeProviders(() => {
+      syncEthereumAccount(modal);
+      void syncBitcoinAccount(modal);
+    });
+    walletUnsubscribeRef.current = () => {
+      unsubscribeEthereum();
+      unsubscribeBitcoin();
+      unsubscribeProviders();
+    };
+  }
+
   async function prepareBitcoinPayment() {
-    const bitcoinProvider = bitcoinAppKitRef.current?.getProvider<BitcoinWalletProvider>("bip122");
+    const bitcoinProvider = walletAppKitRef.current?.getProvider<BitcoinWalletProvider>("bip122");
     if (asset !== "BTC" || !bitcoinWalletConnected) {
       setError(t("error.bitcoinWallet"));
       return;
@@ -313,22 +305,9 @@ export function MainnetTransfer() {
       const config = await configResponse.json() as { projectId?: string };
       if (!config.projectId) throw new Error("WALLET_CONFIG_UNAVAILABLE");
 
-      const modal = await getBitcoinAppKit(config.projectId);
-      bitcoinAppKitRef.current = modal;
-      bitcoinUnsubscribeRef.current?.();
-      const unsubscribeAccount = modal.subscribeAccount((next) => {
-        void syncBitcoinAccount(modal, next);
-      }, "bip122");
-      const unsubscribeProviders = modal.subscribeProviders((providers) => {
-        if (providers.bip122 && modal.getAccount("bip122")?.isConnected) {
-          setBitcoinWalletConnected(true);
-        }
-        void syncBitcoinAccount(modal);
-      });
-      bitcoinUnsubscribeRef.current = () => {
-        unsubscribeAccount();
-        unsubscribeProviders();
-      };
+      const modal = await getWalletAppKit(config.projectId);
+      walletAppKitRef.current = modal;
+      subscribeWalletState(modal);
 
       const current = modal.getAccount("bip122");
       if (await syncBitcoinAccount(modal, current)) {
@@ -353,32 +332,12 @@ export function MainnetTransfer() {
       const config = await configResponse.json() as { projectId?: string };
       if (!config.projectId) throw new Error("WALLET_CONFIG_UNAVAILABLE");
 
-      const { default: EthereumProvider } = await import("@walletconnect/ethereum-provider");
-      const provider = await EthereumProvider.init({
-        projectId: config.projectId,
-        chains: [1],
-        optionalChains: [1],
-        showQrModal: true,
-        methods: ["eth_sendTransaction", "personal_sign"],
-        optionalMethods: [
-          "eth_getBalance",
-          "eth_getTransactionReceipt",
-          "wallet_switchEthereumChain",
-        ],
-        events: ["chainChanged", "accountsChanged"],
-        metadata: {
-          name: "Ligne",
-          description: "Transfert non dépositaire d’ETH sur Ethereum Mainnet.",
-          url: window.location.origin,
-          icons: [],
-        },
-      });
-      await provider.connect();
-      const address = provider.accounts[0];
-      if (!address) throw new Error("NO_ACCOUNT");
-      providerRef.current = provider as WalletProvider;
-      setAccount(address.toLowerCase() as `0x${string}`);
-      sessionStorage.setItem("ligne.wallet.address", address.toLowerCase());
+      const modal = await getWalletAppKit(config.projectId);
+      walletAppKitRef.current = modal;
+      subscribeWalletState(modal);
+      if (syncEthereumAccount(modal)) return;
+      await modal.open({ view: "Connect", namespace: "eip155" });
+      syncEthereumAccount(modal);
     } catch (caught) {
       console.error("[Ligne WalletConnect] Connexion échouée", caught);
       setError(messageFor(caught, t));
@@ -455,7 +414,7 @@ export function MainnetTransfer() {
     };
   }, [hash, receipt]);
 
-  useEffect(() => () => bitcoinUnsubscribeRef.current?.(), []);
+  useEffect(() => () => walletUnsubscribeRef.current?.(), []);
 
   return (
     <section className="real-transfer" aria-labelledby="real-transfer-title">

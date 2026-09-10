@@ -1,15 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRightIcon, ArrowUpRightIcon, WalletIcon } from "./Icons";
 import { useLanguage } from "./LanguageProvider";
-
-type WalletProvider = {
-  accounts: string[];
-  connect(): Promise<void>;
-  disconnect(): Promise<void>;
-  request<T = unknown>(args: { method: string; params?: unknown[] }): Promise<T>;
-};
+import { getWalletAppKit, type WalletAccountState, type WalletAppKit, type WalletProvider } from "@/lib/wallet-appkit";
 
 type BalanceState =
   | { status: "idle" | "loading" }
@@ -36,10 +30,50 @@ function formatEtherBalance(hexValue: string) {
 export function WalletConnectCard() {
   const { t } = useLanguage();
   const providerRef = useRef<WalletProvider | null>(null);
+  const modalRef = useRef<WalletAppKit | null>(null);
+  const unsubscribeRef = useRef<(() => void) | null>(null);
   const [address, setAddress] = useState("");
   const [status, setStatus] = useState<"idle" | "connecting" | "connected" | "error">("idle");
   const [balance, setBalance] = useState<BalanceState>({ status: "idle" });
   const [message, setMessage] = useState("");
+
+  async function syncEthereumAccount(
+    modal: WalletAppKit,
+    state: WalletAccountState | undefined = modal.getAccount("eip155"),
+  ) {
+    const account = state?.address
+      ?? state?.allAccounts?.find((item) => item.namespace === "eip155")?.address
+      ?? modal.getAddress("eip155");
+    const provider = modal.getProvider<WalletProvider>("eip155");
+
+    if (!account || !/^0x[0-9a-fA-F]{40}$/.test(account) || !provider) {
+      if (state?.status === "disconnected") {
+        providerRef.current = null;
+        setAddress("");
+        setStatus("idle");
+        setBalance({ status: "idle" });
+        sessionStorage.removeItem("ligne.wallet.address");
+      }
+      return false;
+    }
+
+    const normalized = account.toLowerCase();
+    providerRef.current = provider;
+    setAddress(normalized);
+    sessionStorage.setItem("ligne.wallet.address", normalized);
+    setStatus("connected");
+    setBalance({ status: "loading" });
+    try {
+      const balanceHex = await provider.request<string>({
+        method: "eth_getBalance",
+        params: [normalized, "latest"],
+      });
+      setBalance({ status: "success", value: formatEtherBalance(balanceHex) });
+    } catch {
+      setBalance({ status: "error" });
+    }
+    return true;
+  }
 
   async function connect() {
     setStatus("connecting");
@@ -50,39 +84,23 @@ export function WalletConnectCard() {
       const config = await configResponse.json() as { projectId?: string };
       if (!config.projectId) throw new Error("CONFIG_PROJECT_ID_MISSING");
 
-      const { default: EthereumProvider } = await import("@walletconnect/ethereum-provider");
-      const provider = await EthereumProvider.init({
-        projectId: config.projectId,
-        optionalChains: [1],
-        showQrModal: true,
-        optionalMethods: ["eth_sendTransaction", "personal_sign", "eth_signTypedData"],
-        optionalEvents: ["chainChanged", "accountsChanged"],
-        customStoragePrefix: "ligne-trust-v2",
-        metadata: {
-          name: "Ligne",
-          url: window.location.origin,
-          icons: [],
-        },
+      const modal = await getWalletAppKit(config.projectId);
+      modalRef.current = modal;
+      unsubscribeRef.current?.();
+      const unsubscribeAccount = modal.subscribeAccount((next) => {
+        void syncEthereumAccount(modal, next);
+      }, "eip155");
+      const unsubscribeProviders = modal.subscribeProviders(() => {
+        void syncEthereumAccount(modal);
       });
-      providerRef.current = provider as WalletProvider;
-      await provider.connect();
-      const account = provider.accounts[0];
-      if (!account) throw new Error("NO_ACCOUNT");
-      const normalized = account.toLowerCase();
-      setAddress(normalized);
-      sessionStorage.setItem("ligne.wallet.address", normalized);
-      setStatus("connected");
-      setBalance({ status: "loading" });
+      unsubscribeRef.current = () => {
+        unsubscribeAccount();
+        unsubscribeProviders();
+      };
 
-      try {
-        const balanceHex = await provider.request<string>({
-          method: "eth_getBalance",
-          params: [normalized, "latest"],
-        });
-        setBalance({ status: "success", value: formatEtherBalance(balanceHex) });
-      } catch {
-        setBalance({ status: "error" });
-      }
+      if (await syncEthereumAccount(modal)) return;
+      await modal.open({ view: "Connect", namespace: "eip155" });
+      if (!await syncEthereumAccount(modal)) setStatus("idle");
     } catch (error) {
       setStatus("error");
       setBalance({ status: "idle" });
@@ -95,7 +113,7 @@ export function WalletConnectCard() {
   }
 
   async function disconnect() {
-    try { await providerRef.current?.disconnect(); } catch { /* session déjà fermée */ }
+    try { await modalRef.current?.disconnect("eip155"); } catch { /* session déjà fermée */ }
     providerRef.current = null;
     sessionStorage.removeItem("ligne.wallet.address");
     setAddress("");
@@ -103,6 +121,8 @@ export function WalletConnectCard() {
     setBalance({ status: "idle" });
     setMessage("");
   }
+
+  useEffect(() => () => unsubscribeRef.current?.(), []);
 
   return (
       <aside className={`wallet-card ${status === "connected" ? "is-connected" : ""}`} aria-label="WalletConnect Ethereum Mainnet">
