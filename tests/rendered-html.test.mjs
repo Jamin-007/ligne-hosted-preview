@@ -141,9 +141,7 @@ test("keeps token preparation server-side while the frontend exposes BTC and ETH
   assert.match(client, /error\.bitcoinAccountUnavailable/);
   assert.match(client, /asset === "BTC" && !bitcoinWalletConnected/);
   assert.match(client, /bitcoinProvider!\.sendTransfer/);
-  assert.match(client, /connectTrustForBitcoin/);
-  assert.match(client, /connection_account: account/);
-  assert.match(client, /window\.location\.assign\(body\.data\.trust_wallet_url\)/);
+  assert.doesNotMatch(client, /connectTrustForBitcoin|connection_account|trust_wallet_url/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
   assert.match(translations, /"transfer\.submit": "Vérifier dans mon wallet"/);
   assert.match(translations, /"transfer\.confirmWallet": "Confirmez dans votre wallet/);
@@ -210,38 +208,7 @@ test("prepares a native Bitcoin payment with an exact satoshi amount", async () 
   assert.equal(body.data.amount, "0.00012345");
   assert.equal(body.data.amount_sats, "12345");
   assert.equal(body.data.recipient_address, TEST_BITCOIN_ADDRESS);
-  assert.equal(
-    body.data.payment_uri,
-    `bitcoin:${TEST_BITCOIN_ADDRESS}?amount=0.00012345&label=Ligne`,
-  );
-  assert.equal(
-    body.data.trust_wallet_url,
-    `https://link.trustwallet.com/send?asset=c0&address=${TEST_BITCOIN_ADDRESS}&amount=0.00012345`,
-  );
-  assert.deepEqual(body.data.wallet_request, {
-    method: "sendTransfer",
-    params: { amount: "12345", recipient: TEST_BITCOIN_ADDRESS },
-  });
   assert.match(body.data.request_id, /^btc_/);
-});
-
-test("prepares a Trust Wallet Bitcoin mobile payment after wallet connection", async () => {
-  const response = await requestWorker("/api/v1/bitcoin/transfer-requests", {
-    method: "POST",
-    headers: { "content-type": "application/json" },
-    body: JSON.stringify({
-      connection_account: "0x1111111111111111111111111111111111111111",
-      amount: "0.001",
-    }),
-  });
-  assert.equal(response.status, 200);
-  const body = await response.json();
-  assert.equal(body.data.amount_sats, "100000");
-  assert.equal(body.data.connection_account, "0x1111111111111111111111111111111111111111");
-  assert.equal(
-    body.data.trust_wallet_url,
-    `https://link.trustwallet.com/send?asset=c0&address=${TEST_BITCOIN_ADDRESS}&amount=0.001`,
-  );
 });
 
 test("rejects unsafe BTC precision and an invalid configured Bitcoin address", async () => {

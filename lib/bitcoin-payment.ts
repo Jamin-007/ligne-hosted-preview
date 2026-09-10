@@ -17,16 +17,7 @@ export const BITCOIN_MAINNET_CAIP2 = "bip122:000000000019d6689c085ae165831e93";
 export type BitcoinPaymentRequest = {
   amount: string;
   amountSats: string;
-  paymentUri: string;
   recipientAddress: string;
-  trustWalletUrl: string;
-  walletRequest: {
-    method: "sendTransfer";
-    params: {
-      amount: string;
-      recipient: string;
-    };
-  };
 };
 
 function bech32Polymod(values: number[]) {
@@ -169,22 +160,10 @@ export async function buildBitcoinPaymentRequest(
 
   const parsed = parseBitcoinAmount(amount);
   const amountSats = parsed.satoshis.toString();
-  const paymentUri = `bitcoin:${recipientAddress}?amount=${parsed.normalized}&label=Ligne`;
-  const trustWalletParameters = new URLSearchParams({
-    asset: "c0",
-    address: recipientAddress,
-    amount: parsed.normalized,
-  });
 
   return {
     amount: parsed.normalized,
     amountSats,
-    paymentUri,
     recipientAddress,
-    trustWalletUrl: `https://link.trustwallet.com/send?${trustWalletParameters.toString()}`,
-    walletRequest: {
-      method: "sendTransfer",
-      params: { amount: amountSats, recipient: recipientAddress },
-    },
   };
 }
