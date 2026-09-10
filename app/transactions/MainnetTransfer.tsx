@@ -46,6 +46,11 @@ type PreparedBitcoinPayment = {
 
 type SelectableAsset = TransferAsset | "BTC";
 
+type MainnetTransferProps = {
+  conversionReady?: boolean;
+  onConnectionChange?: (connected: boolean) => void;
+};
+
 const ASSET_OPTIONS: Array<{
   symbol: SelectableAsset;
   icon: string;
@@ -117,7 +122,10 @@ function messageFor(error: unknown, t: (key: TranslationKey) => string) {
   return t("error.transaction");
 }
 
-export function MainnetTransfer() {
+export function MainnetTransfer({
+  conversionReady = true,
+  onConnectionChange,
+}: MainnetTransferProps = {}) {
   const { t } = useLanguage();
   const providerRef = useRef<WalletProvider | null>(null);
   const walletAppKitRef = useRef<WalletAppKit | null>(null);
@@ -148,6 +156,9 @@ export function MainnetTransfer() {
     }
   }, [asset, amount]);
   const cashbackAmount = useMemo(() => calculateCashback(amount), [amount]);
+  const activeWalletConnected = asset === "BTC"
+    ? Boolean(bitcoinWalletConnected && bitcoinAccount)
+    : Boolean(account);
 
   function resetTransfer() {
     setPrepared(undefined);
@@ -416,14 +427,20 @@ export function MainnetTransfer() {
 
   useEffect(() => () => walletUnsubscribeRef.current?.(), []);
 
+  useEffect(() => {
+    onConnectionChange?.(activeWalletConnected);
+  }, [activeWalletConnected, onConnectionChange]);
+
   return (
     <section className="real-transfer" aria-labelledby="real-transfer-title">
       <div className="real-transfer-heading">
         <div>
           <p className="trust-card-kicker"><LockIcon /> {t("transfer.nonCustodial")}</p>
-          <h2 id="real-transfer-title">{t("transfer.title")}</h2>
+          <h2 id="real-transfer-title">
+            {conversionReady ? t("transfer.title") : t("transfer.walletFirstTitle")}
+          </h2>
         </div>
-        <p>{t("transfer.explainer")}</p>
+        <p>{conversionReady ? t("transfer.explainer") : t("transfer.walletFirstExplainer")}</p>
       </div>
 
       <div className="transfer-asset-selector">
@@ -444,13 +461,29 @@ export function MainnetTransfer() {
         </div>
       </div>
 
-      {asset === "BTC" && !bitcoinWalletConnected ? (
+      {asset === "BTC" && !activeWalletConnected ? (
         <div className="mainnet-connect bitcoin-connect">
           <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
           <button className="connect-wallet-cta" type="button" onClick={() => void connectBitcoin()} disabled={status === "connecting"}>
             <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connectBitcoin")} <ArrowRightIcon /></>}
           </button>
           {error && <p className="transfer-error" role="alert">{error}</p>}
+        </div>
+      ) : !activeWalletConnected ? (
+        <div className="mainnet-connect">
+          <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
+          <button className="connect-wallet-cta" type="button" onClick={() => void connect()} disabled={status === "connecting"}>
+            <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connect")} <ArrowRightIcon /></>}
+          </button>
+          {error && <p className="transfer-error" role="alert">{error}</p>}
+        </div>
+      ) : !conversionReady ? (
+        <div className="mainnet-connect wallet-first-ready" role="status">
+          <div>
+            <strong>{t("transfer.walletConnected")}</strong>
+            <span>{asset === "BTC" && bitcoinAccount ? short(bitcoinAccount) : account ? short(account) : t("transfer.notConnected")}</span>
+          </div>
+          <p>{t("transfer.walletConnectedContinue")}</p>
         </div>
       ) : asset === "BTC" ? (
         <div className="transfer-grid bitcoin-transfer-grid">
@@ -525,14 +558,6 @@ export function MainnetTransfer() {
               </div>
             )}
           </aside>
-        </div>
-      ) : !account ? (
-        <div className="mainnet-connect">
-          <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
-          <button className="connect-wallet-cta" type="button" onClick={() => void connect()} disabled={status === "connecting"}>
-            <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connect")} <ArrowRightIcon /></>}
-          </button>
-          {error && <p className="transfer-error" role="alert">{error}</p>}
         </div>
       ) : (
         <div className="transfer-grid">

@@ -481,6 +481,8 @@ footer { min-height: 90px; display: flex; align-items: center; justify-content: 
 .trust-app-page .transfer-asset-selector { padding: 25px clamp(30px, 4vw, 54px) 28px; border-bottom: 1px solid #e4e4e9; background: white; }
 .trust-app-page .transfer-asset-selector .micro-label { margin: 0 0 12px; color: var(--trust-muted); }
 .trust-app-page .mainnet-connect { padding: 30px clamp(30px, 4vw, 54px); border-top: 0; background: #f4f5f9; }.trust-app-page .mainnet-connect > div strong { color: var(--trust-ink); }.trust-app-page .mainnet-connect button, .trust-app-page .prepare-transfer, .trust-app-page .send-transfer { min-height: 56px; padding: 0 20px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border-radius: 16px; background: var(--trust-blue); }.trust-app-page .mainnet-connect button svg, .trust-app-page .prepare-transfer svg, .trust-app-page .send-transfer svg { width: 18px; height: 18px; }
+.trust-app-page .wallet-first-ready { border-left: 4px solid var(--green); background: #f1f8f4; }.trust-app-page .wallet-first-ready > div strong { color: var(--green); }.trust-app-page .wallet-first-ready > p { max-width: 440px; margin: 0; color: var(--trust-muted); font-size: 13px; line-height: 1.55; }
+.wallet-first-unlocked { animation: wallet-reveal-in 320ms ease; }
 .connect-wallet-cta { position: relative; transition: transform 180ms ease, box-shadow 180ms ease; animation: connect-cta-pulse 2.4s ease-in-out infinite; }
 .connect-wallet-cta:hover { transform: translateY(-2px); }
 .connect-wallet-cta svg:last-child { transition: transform 200ms ease; }

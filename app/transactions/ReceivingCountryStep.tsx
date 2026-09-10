@@ -39,11 +39,18 @@ function countryName(code: CountryCode, t: (key: TranslationKey) => string) {
 
 export function ReceivingCountryStep() {
   const { t } = useLanguage();
+  const [walletConnected, setWalletConnected] = useState(false);
   const [selectedCode, setSelectedCode] = useState<CountryCode | null>(null);
   const [phoneVerified, setPhoneVerified] = useState(false);
   const selected = RECEIVING_COUNTRIES.find((country) => country.code === selectedCode);
+  const transferRef = useRef<HTMLDivElement>(null);
+  const countryStepRef = useRef<HTMLElement>(null);
   const phoneStepRef = useRef<HTMLDivElement>(null);
-  const connectWalletRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!walletConnected) return;
+    countryStepRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [walletConnected]);
 
   useEffect(() => {
     if (!selectedCode) return;
@@ -52,12 +59,19 @@ export function ReceivingCountryStep() {
 
   useEffect(() => {
     if (!phoneVerified) return;
-    connectWalletRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    transferRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [phoneVerified]);
 
   return (
     <>
-      <section className="receive-country-step" aria-labelledby="receive-country-title">
+      <div ref={transferRef}>
+        <MainnetTransfer
+          conversionReady={phoneVerified}
+          onConnectionChange={setWalletConnected}
+        />
+      </div>
+
+      {walletConnected ? <section ref={countryStepRef} className="receive-country-step wallet-first-unlocked" aria-labelledby="receive-country-title">
         <h2 id="receive-country-title">{t("transfer.countryPromptTitle")}</h2>
         <p>{t("transfer.countryPromptSubtitle")}</p>
         <div className="receive-country-grid">
@@ -79,24 +93,21 @@ export function ReceivingCountryStep() {
             </button>
           ))}
         </div>
-      </section>
+      </section> : (
+        <p className="receive-country-hint">{t("transfer.walletFirstHint")}</p>
+      )}
 
-      {selected ? (
+      {walletConnected && selected ? (
         <div ref={phoneStepRef}>
           <div className="receive-country-pitch">
             <h3>{t(selected.pitch?.title ?? "transfer.genericPitchTitle")}</h3>
             <p>{t(selected.pitch?.subtitle ?? "transfer.genericPitchSubtitle")}</p>
           </div>
           <PhoneNumberStep key={selected.code} code={selected.code} onVerified={() => setPhoneVerified(true)} />
-          {phoneVerified && (
-            <div id="connect-wallet" className="wallet-reveal" ref={connectWalletRef}>
-              <MainnetTransfer />
-            </div>
-          )}
         </div>
-      ) : (
+      ) : walletConnected ? (
         <p className="receive-country-hint">{t("transfer.countryPromptHint")}</p>
-      )}
+      ) : null}
     </>
   );
 }

@@ -144,7 +144,7 @@ test("keeps token preparation server-side while the frontend exposes BTC and ETH
   assert.match(client, /subscribeProviders/);
   assert.match(client, /bitcoinWalletConnected/);
   assert.match(client, /error\.bitcoinAccountUnavailable/);
-  assert.match(client, /asset === "BTC" && !bitcoinWalletConnected/);
+  assert.match(client, /asset === "BTC" && !activeWalletConnected/);
   assert.match(client, /bitcoinProvider!\.sendTransfer/);
   assert.doesNotMatch(client, /connectTrustForBitcoin|connection_account|trust_wallet_url/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
@@ -273,6 +273,16 @@ test("uses one multichain AppKit instance for ETH and BTC", async () => {
   assert.match(walletAppKit, /new BitcoinAdapter/);
   assert.match(walletAppKit, /networks: \[mainnet, bitcoin\]/);
   assert.doesNotMatch(source, /@walletconnect\/ethereum-provider|EthereumProvider\.init/);
+});
+
+test("requires the matching wallet before revealing the conversion journey", async () => {
+  const flow = await readFile(new URL("../app/transactions/ReceivingCountryStep.tsx", import.meta.url), "utf8");
+  const transfer = await readFile(new URL("../app/transactions/MainnetTransfer.tsx", import.meta.url), "utf8");
+  assert.ok(flow.indexOf("<MainnetTransfer") < flow.indexOf("<section ref={countryStepRef}"));
+  assert.match(flow, /walletConnected \? <section/);
+  assert.match(flow, /conversionReady=\{phoneVerified\}/);
+  assert.match(transfer, /activeWalletConnected/);
+  assert.match(transfer, /!conversionReady \? \(/);
 });
 
 test("loads and displays the native balance after WalletConnect connects", async () => {
