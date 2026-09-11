@@ -49,9 +49,10 @@ test("renders the conversion preview", async () => {
   assert.match(html, /BTC · ETH/);
   assert.doesNotMatch(html, /USDT|USDC/);
   assert.match(html, /Réseaux séparés/);
-  assert.match(html, /Où souhaitez-vous recevoir votre argent/);
-  assert.match(html, /Choisissez un pays pour continuer/);
-  assert.doesNotMatch(html, /Connecter avec WalletConnect/);
+  assert.match(html, /Connectez d’abord votre wallet/);
+  assert.match(html, /Connecter avec WalletConnect/);
+  assert.doesNotMatch(html, /Où souhaitez-vous recevoir votre argent/);
+  assert.doesNotMatch(html, /Choisissez un pays pour continuer/);
   assert.doesNotMatch(html, /Tester le pipeline serveur/);
 });
 
@@ -141,6 +142,9 @@ test("keeps token preparation server-side while the frontend exposes BTC and ETH
   assert.match(client, /getAccountAddresses\(\)/);
   assert.match(client, /item\.type === "payment"/);
   assert.match(client, /syncBitcoinAccount\(modal/);
+  assert.match(client, /modal\.disconnect\("eip155"\)/);
+  assert.match(client, /modal\.disconnect\("bip122"\)/);
+  assert.match(client, /activateWalletNetwork\(modal, "bip122"\)/);
   assert.match(client, /subscribeProviders/);
   assert.match(client, /bitcoinWalletConnected/);
   assert.match(client, /error\.bitcoinAccountUnavailable/);
@@ -273,6 +277,21 @@ test("uses one multichain AppKit instance for ETH and BTC", async () => {
   assert.match(walletAppKit, /new BitcoinAdapter/);
   assert.match(walletAppKit, /networks: \[mainnet, bitcoin\]/);
   assert.doesNotMatch(source, /@walletconnect\/ethereum-provider|EthereumProvider\.init/);
+});
+
+test("pins Reown to Wagmi 2 and waits for AppKit before opening Connect", async () => {
+  const packageJson = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
+  const transfer = await readFile(new URL("../app/transactions/MainnetTransfer.tsx", import.meta.url), "utf8");
+  const walletAppKit = await readFile(new URL("../lib/wallet-appkit.ts", import.meta.url), "utf8");
+  assert.match(packageJson.dependencies.wagmi, /^2\./);
+  assert.match(packageJson.dependencies["@wagmi/connectors"], /^6\./);
+  assert.match(packageJson.dependencies["@wagmi/core"], /^2\./);
+  assert.match(walletAppKit, /ready\(\): Promise<void>/);
+  assert.match(walletAppKit, /modal\.ready\(\)\.then\(\(\) => modal\)/);
+  assert.match(walletAppKit, /basic: true/);
+  assert.match(walletAppKit, /modal\.switchNetwork/);
+  assert.doesNotMatch(walletAppKit, /SESSION_RESTORE_DELAY_MS|setTimeout/);
+  assert.ok(transfer.indexOf("getWalletAppKit(config.projectId)") < transfer.indexOf('modal.open({ view: "Connect"'));
 });
 
 test("requires the matching wallet before revealing the conversion journey", async () => {

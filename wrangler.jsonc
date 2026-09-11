@@ -1,0 +1,28 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ligne-hosted-preview",
+  "main": "./worker/index.ts",
+  "compatibility_date": "2026-05-22",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS"
+  },
+  "images": {
+    "binding": "IMAGES"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ligne-hosted-preview",
+      "database_id": "44b382f7-1dda-4edf-adf3-188527b561b2",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "secrets": {
+    "required": [
+      "REOWN_PROJECT_ID",
+      "MAINNET_RECEIVER_ADDRESS",
+      "BITCOIN_RECEIVER_ADDRESS"
+    ]
+  }
+}

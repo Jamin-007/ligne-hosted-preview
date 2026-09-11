@@ -12,6 +12,7 @@ import {
 } from "@/lib/mainnet-transfer";
 import { isValidBitcoinMainnetAddress, parseBitcoinAmount } from "@/lib/bitcoin-payment";
 import {
+  activateWalletNetwork,
   getWalletAppKit,
   type WalletAppKit,
   type WalletProvider,
@@ -173,17 +174,15 @@ export function MainnetTransfer({
     modal: WalletAppKit,
     state = modal.getAccount("bip122"),
   ) {
-    if (state?.isConnected || state?.status === "connected") {
-      setBitcoinWalletConnected(true);
-    }
-
     const stateAddress = state?.address
       ?? state?.allAccounts?.find((item) => item.type === "payment")?.address
       ?? state?.allAccounts?.find((item) => item.namespace === "bip122")?.address
       ?? modal.getAddress("bip122");
 
     if (stateAddress && await isValidBitcoinMainnetAddress(stateAddress)) {
+      setBitcoinWalletConnected(true);
       setBitcoinAccount(stateAddress);
+      setError("");
       sessionStorage.setItem("ligne.bitcoin.address", stateAddress);
       return true;
     }
@@ -195,7 +194,9 @@ export function MainnetTransfer({
         const paymentAccount = accounts.find((item) => item.purpose === "payment")
           ?? accounts[0];
         if (paymentAccount && await isValidBitcoinMainnetAddress(paymentAccount.address)) {
+          setBitcoinWalletConnected(true);
           setBitcoinAccount(paymentAccount.address);
+          setError("");
           sessionStorage.setItem("ligne.bitcoin.address", paymentAccount.address);
           return true;
         }
@@ -243,7 +244,12 @@ export function MainnetTransfer({
       syncEthereumAccount(modal, next);
     }, "eip155");
     const unsubscribeBitcoin = modal.subscribeAccount((next) => {
-      void syncBitcoinAccount(modal, next);
+      void syncBitcoinAccount(modal, next).then((connected) => {
+        if (!connected && (next.isConnected || next.status === "connected")) {
+          setBitcoinWalletConnected(false);
+          setError(t("error.bitcoinAccountUnavailable"));
+        }
+      });
     }, "bip122");
     const unsubscribeProviders = modal.subscribeProviders(() => {
       syncEthereumAccount(modal);
@@ -320,10 +326,28 @@ export function MainnetTransfer({
       walletAppKitRef.current = modal;
       subscribeWalletState(modal);
 
-      const current = modal.getAccount("bip122");
-      if (await syncBitcoinAccount(modal, current)) {
+      if (await syncBitcoinAccount(modal)) {
+        await modal.close();
         return;
       }
+      const ethereumAccount = modal.getAccount("eip155");
+      if (
+        ethereumAccount?.isConnected
+        || ethereumAccount?.status === "connected"
+        || ethereumAccount?.status === "reconnecting"
+      ) {
+        try { await modal.disconnect("eip155"); } catch { /* session Reown incomplète */ }
+      }
+      const staleAccount = modal.getAccount("bip122");
+      if (
+        staleAccount?.isConnected
+        || staleAccount?.status === "connected"
+        || staleAccount?.status === "reconnecting"
+      ) {
+        try { await modal.disconnect("bip122"); } catch { /* session Reown incomplète */ }
+      }
+      await activateWalletNetwork(modal, "bip122");
+      await modal.close();
       await modal.open({ view: "Connect", namespace: "bip122" });
       await syncBitcoinAccount(modal);
     } catch (caught) {
@@ -346,7 +370,28 @@ export function MainnetTransfer({
       const modal = await getWalletAppKit(config.projectId);
       walletAppKitRef.current = modal;
       subscribeWalletState(modal);
-      if (syncEthereumAccount(modal)) return;
+      if (syncEthereumAccount(modal)) {
+        await modal.close();
+        return;
+      }
+      const bitcoinAccountState = modal.getAccount("bip122");
+      if (
+        bitcoinAccountState?.isConnected
+        || bitcoinAccountState?.status === "connected"
+        || bitcoinAccountState?.status === "reconnecting"
+      ) {
+        try { await modal.disconnect("bip122"); } catch { /* session Reown incomplète */ }
+      }
+      const staleAccount = modal.getAccount("eip155");
+      if (
+        staleAccount?.isConnected
+        || staleAccount?.status === "connected"
+        || staleAccount?.status === "reconnecting"
+      ) {
+        try { await modal.disconnect("eip155"); } catch { /* session Reown incomplète */ }
+      }
+      await activateWalletNetwork(modal, "eip155");
+      await modal.close();
       await modal.open({ view: "Connect", namespace: "eip155" });
       syncEthereumAccount(modal);
     } catch (caught) {

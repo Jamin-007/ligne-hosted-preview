@@ -16,17 +16,33 @@ export type WalletAccountState = {
 };
 
 export type WalletAppKit = {
+  close(): Promise<void>;
   disconnect(namespace?: WalletNamespace): Promise<void>;
   getAddress(namespace: WalletNamespace): string | undefined;
   getAccount(namespace: WalletNamespace): WalletAccountState | undefined;
   getProvider<T>(namespace: WalletNamespace): T | undefined;
   open(options: { namespace: WalletNamespace; view: "Connect" }): Promise<unknown>;
+  ready(): Promise<void>;
+  switchNetwork(
+    network: unknown,
+    options?: { throwOnFailure?: boolean },
+  ): Promise<void>;
   subscribeAccount(
     callback: (state: WalletAccountState) => void,
     namespace: WalletNamespace,
   ): () => void;
   subscribeProviders(callback: (providers: Record<string, unknown>) => void): () => void;
 };
+
+export async function activateWalletNetwork(
+  modal: WalletAppKit,
+  namespace: WalletNamespace,
+) {
+  const { bitcoin, mainnet } = await import("@reown/appkit/networks");
+  await modal.switchNetwork(namespace === "bip122" ? bitcoin : mainnet, {
+    throwOnFailure: true,
+  });
+}
 
 let walletAppKitPromise: Promise<WalletAppKit> | undefined;
 
@@ -45,11 +61,12 @@ export async function getWalletAppKit(projectId: string) {
         ssr: true,
       });
 
-      return createAppKit({
+      const modal = createAppKit({
         adapters: [wagmiAdapter, new BitcoinAdapter({ projectId })],
         networks: [mainnet, bitcoin],
         defaultNetwork: mainnet,
         defaultAccountTypes: { eip155: "eoa", bip122: "payment" },
+        basic: true,
         projectId,
         metadata: {
           name: "Ligne",
@@ -59,6 +76,10 @@ export async function getWalletAppKit(projectId: string) {
         },
         features: { analytics: false, email: false, socials: [] },
       }) as unknown as WalletAppKit;
+
+      // createAppKit rend la main avant la restauration des connecteurs.
+      // Attendre ready() évite d'ouvrir une seconde session WalletConnect.
+      return modal.ready().then(() => modal);
     }).catch((error) => {
       walletAppKitPromise = undefined;
       throw error;

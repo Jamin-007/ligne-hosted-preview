@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRightIcon, ArrowUpRightIcon, WalletIcon } from "./Icons";
 import { useLanguage } from "./LanguageProvider";
-import { getWalletAppKit, type WalletAccountState, type WalletAppKit, type WalletProvider } from "@/lib/wallet-appkit";
+import { activateWalletNetwork, getWalletAppKit, type WalletAccountState, type WalletAppKit, type WalletProvider } from "@/lib/wallet-appkit";
 
 type BalanceState =
   | { status: "idle" | "loading" }
@@ -98,7 +98,20 @@ export function WalletConnectCard() {
         unsubscribeProviders();
       };
 
-      if (await syncEthereumAccount(modal)) return;
+      if (await syncEthereumAccount(modal)) {
+        await modal.close();
+        return;
+      }
+      const staleAccount = modal.getAccount("eip155");
+      if (
+        staleAccount?.isConnected
+        || staleAccount?.status === "connected"
+        || staleAccount?.status === "reconnecting"
+      ) {
+        try { await modal.disconnect("eip155"); } catch { /* session Reown incomplète */ }
+      }
+      await activateWalletNetwork(modal, "eip155");
+      await modal.close();
       await modal.open({ view: "Connect", namespace: "eip155" });
       if (!await syncEthereumAccount(modal)) setStatus("idle");
     } catch (error) {
