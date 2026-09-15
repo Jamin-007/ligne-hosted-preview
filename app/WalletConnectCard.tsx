@@ -119,7 +119,7 @@ export function WalletConnectCard() {
 
       await activateEthereumMainnet(modal);
       await modal.close();
-      await modal.open({ view: "Connect", namespace: "eip155" });
+      await modal.open({ view: "ConnectingWalletConnect", namespace: "eip155" });
       if (!await syncEthereumAccount(modal)) setStatus("idle");
     } catch (error) {
       setStatus("error");

@@ -177,7 +177,7 @@ export function MainnetTransfer() {
 
       await activateEthereumMainnet(modal);
       await modal.close();
-      await modal.open({ view: "Connect", namespace: "eip155" });
+      await modal.open({ view: "ConnectingWalletConnect", namespace: "eip155" });
       syncEthereumAccount(modal);
     } catch (caught) {
       console.error("[Ligne WalletConnect] Connexion échouée", caught);

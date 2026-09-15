@@ -19,7 +19,10 @@ export type WalletAppKit = {
   getAddress(namespace: "eip155"): string | undefined;
   getAccount(namespace: "eip155"): WalletAccountState | undefined;
   getProvider<T>(namespace: "eip155"): T | undefined;
-  open(options: { namespace: "eip155"; view: "Connect" }): Promise<unknown>;
+  open(options: {
+    namespace: "eip155";
+    view: "Connect" | "ConnectingWalletConnect";
+  }): Promise<unknown>;
   ready(): Promise<void>;
   switchNetwork(network: unknown, options?: { throwOnFailure?: boolean }): Promise<void>;
   subscribeAccount(
@@ -55,7 +58,6 @@ export async function getWalletAppKit(projectId: string) {
         networks: [mainnet],
         defaultNetwork: mainnet,
         defaultAccountTypes: { eip155: "eoa" },
-        basic: true,
         projectId,
         metadata: {
           name: "Ligne",

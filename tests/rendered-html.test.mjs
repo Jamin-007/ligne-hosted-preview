@@ -26,12 +26,12 @@ test("renders the Ligne Mainnet homepage", async () => {
   const response = await render("/");
   assert.equal(response.status, 200);
   const html = await response.text();
-  assert.match(html, /Envoyer ETH et USDC sur Ethereum Mainnet/);
-  assert.match(html, /Gardez le contrôle/);
-  assert.match(html, /Deux actifs/);
+  assert.match(html, /Votre crypto\./);
+  assert.match(html, /Votre wallet habituel suffit pour commencer/);
+  assert.match(html, /Actifs pris en charge/);
   assert.match(html, /Trust Wallet/);
   assert.match(html, /Ouvrir WalletConnect/);
-  assert.match(html, /Demande sécurisée/);
+  assert.match(html, /Votre argent mérite de la transparence/);
   assert.doesNotMatch(html, new RegExp(TEST_RECEIVER_ADDRESS, "i"));
   assert.doesNotMatch(html, /codex-preview|SkeletonPreview/);
 });
@@ -43,8 +43,8 @@ test("renders the conversion preview", async () => {
   assert.match(html, /ETH \+ USDC · Ethereum Mainnet/);
   assert.match(html, /Valeur réelle/);
   assert.match(html, /Connecter avec WalletConnect/);
-  assert.match(html, /Soumettre une demande de conversion/);
-  assert.match(html, /Un clic prépare la demande puis ouvre votre wallet/);
+  assert.match(html, /Préparez votre envoi/);
+  assert.match(html, /Votre wallet affiche ensuite la destination et les frais/);
   assert.doesNotMatch(html, /Tester le pipeline serveur/);
 });
 
@@ -120,7 +120,7 @@ test("prepares ETH and USDC transfers for wallet signature", async () => {
   assert.match(client, /t\("transfer\.cashback"\)/);
   assert.match(client, /calculateCashback\(amount\)/);
   assert.doesNotMatch(client, /setConfirmed|transfer-confirmation/);
-  assert.match(translations, /"transfer\.submit": "Soumettre et signer"/);
+  assert.match(translations, /"transfer\.submit": "Vérifier dans mon wallet"/);
   assert.match(translations, /"transfer\.confirmWallet": "Confirmez dans votre wallet/);
   assert.match(translations, /"transfer\.cashback": "Cashback estimé"/);
   const server = await readFile(
@@ -161,6 +161,9 @@ test("uses the shared Reown AppKit connection for Ethereum Mainnet", async () =>
   assert.match(walletAppKit, /new WagmiAdapter/);
   assert.match(walletAppKit, /networks: \[mainnet\]/);
   assert.match(walletAppKit, /modal\.ready\(\)/);
+  assert.match(source, /view: "ConnectingWalletConnect"/);
+  assert.match(transfer, /view: "ConnectingWalletConnect"/);
+  assert.doesNotMatch(walletAppKit, /basic:\s*true/);
   assert.doesNotMatch(source, /@walletconnect\/ethereum-provider|EthereumProvider\.init/);
   assert.doesNotMatch(transfer, /@walletconnect\/ethereum-provider|EthereumProvider\.init/);
 });
