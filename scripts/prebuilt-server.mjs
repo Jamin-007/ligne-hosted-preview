@@ -160,7 +160,12 @@ const server = createServer(async (incoming, outgoing) => {
     }
 
     const request = new Request(`${protocol}://${host}${incoming.url ?? "/"}`, init);
-    const response = await nativeApi(request) ?? await worker.fetch(
+    let response = await nativeApi(request);
+    if (!response && (request.method === "GET" || request.method === "HEAD")) {
+      const assetResponse = await fetchAsset(request);
+      if (assetResponse.status !== 404) response = assetResponse;
+    }
+    response ??= await worker.fetch(
       request,
       { ...process.env, ASSETS: { fetch: fetchAsset } },
       executionContext,
