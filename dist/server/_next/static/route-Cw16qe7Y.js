@@ -1,0 +1,1 @@
+import{n as e}from"./demo-backend-DBG6gnrR.js";async function t(t){return e(t)}export{t as POST};

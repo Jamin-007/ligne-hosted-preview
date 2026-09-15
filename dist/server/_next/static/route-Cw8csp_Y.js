@@ -1,0 +1,1 @@
+import{r as e}from"./demo-backend-DBG6gnrR.js";async function t(t,n){let{userId:r}=await n.params;return e(r)}export{t as GET};

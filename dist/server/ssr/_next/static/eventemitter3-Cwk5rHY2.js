@@ -1,0 +1,1 @@
+import{b as e}from"../../index.js";import{n as t}from"./src-BaJza34i.js";var n=e(t(),1);export{n as t};

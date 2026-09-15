@@ -1,0 +1,1539 @@
+{
+  "_AppChrome-Co-5rjeh.js": {
+    "file": "_next/static/chunks/AppChrome-Co-5rjeh.js",
+    "name": "AppChrome",
+    "imports": [
+      "app/LanguageProvider.tsx",
+      "_framework-DLdkyiLr.js"
+    ]
+  },
+  "_ConstantsUtil-CRB3PS0g.js": {
+    "file": "_next/static/chunks/ConstantsUtil-CRB3PS0g.js",
+    "name": "ConstantsUtil"
+  },
+  "_ExchangeController-CodRfQDo.js": {
+    "file": "_next/static/chunks/ExchangeController-CodRfQDo.js",
+    "name": "ExchangeController",
+    "imports": [
+      "_ModalController-KQ_YxXdx.js",
+      "_ExchangeUtil-CtY53trl.js"
+    ]
+  },
+  "_ExchangeUtil-CtY53trl.js": {
+    "file": "_next/static/chunks/ExchangeUtil-CtY53trl.js",
+    "name": "ExchangeUtil",
+    "imports": [
+      "_ModalController-KQ_YxXdx.js"
+    ]
+  },
+  "_HelpersUtil-D1YyiXjK.js": {
+    "file": "_next/static/chunks/HelpersUtil-D1YyiXjK.js",
+    "name": "HelpersUtil",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_ConstantsUtil-CRB3PS0g.js"
+    ]
+  },
+  "_ModalController-KQ_YxXdx.js": {
+    "file": "_next/static/chunks/ModalController-KQ_YxXdx.js",
+    "name": "ModalController",
+    "imports": [
+      "virtual:vinext-app-browser-entry",
+      "_verifyHash-DdiiNoWH.js",
+      "_NetworkUtil-krbWRpls.js",
+      "__esm-B1J65awx.js"
+    ],
+    "dynamicImports": [
+      "__esm-B1J65awx.js"
+    ]
+  },
+  "_NavigationUtil-B34l43F0.js": {
+    "file": "_next/static/chunks/NavigationUtil-B34l43F0.js",
+    "name": "NavigationUtil"
+  },
+  "_NetworkUtil-krbWRpls.js": {
+    "file": "_next/static/chunks/NetworkUtil-krbWRpls.js",
+    "name": "NetworkUtil"
+  },
+  "_OnRampController-B7FCmMnN.js": {
+    "file": "_next/static/chunks/OnRampController-B7FCmMnN.js",
+    "name": "OnRampController",
+    "imports": [
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js"
+    ]
+  },
+  "_SwapController-BipbHG4W.js": {
+    "file": "_next/static/chunks/SwapController-BipbHG4W.js",
+    "name": "SwapController",
+    "imports": [
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js"
+    ]
+  },
+  "_W3MFrameProviderSingleton-B0TNkMtn.js": {
+    "file": "_next/static/chunks/W3MFrameProviderSingleton-B0TNkMtn.js",
+    "name": "W3MFrameProviderSingleton",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_verifyHash-DdiiNoWH.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "__esm-B1J65awx.js"
+    ]
+  },
+  "__esm-B1J65awx.js": {
+    "file": "_next/static/chunks/_esm-B1J65awx.js",
+    "name": "_esm",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_verifyHash-DdiiNoWH.js",
+      "_ccip-BPbeH7q2.js"
+    ]
+  },
+  "_ccip-BPbeH7q2.js": {
+    "file": "_next/static/chunks/ccip-BPbeH7q2.js",
+    "name": "ccip",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_verifyHash-DdiiNoWH.js"
+    ]
+  },
+  "_createConnector-B637JEuD.js": {
+    "file": "_next/static/chunks/createConnector-B637JEuD.js",
+    "name": "createConnector"
+  },
+  "_dist-BceXAijR.js": {
+    "file": "_next/static/chunks/dist-BceXAijR.js",
+    "name": "dist",
+    "imports": [
+      "_verifyHash-DdiiNoWH.js",
+      "_utils-CgxU_3TU.js",
+      "__esm-B1J65awx.js"
+    ]
+  },
+  "_eventemitter3-B2Qegys9.js": {
+    "file": "_next/static/chunks/eventemitter3-B2Qegys9.js",
+    "name": "eventemitter3",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_eventemitter3-J7lIyi5f.js"
+    ]
+  },
+  "_eventemitter3-J7lIyi5f.js": {
+    "file": "_next/static/chunks/eventemitter3-J7lIyi5f.js",
+    "name": "eventemitter3",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js"
+    ]
+  },
+  "_exports-BMuMYkvT.js": {
+    "file": "_next/static/chunks/exports-BMuMYkvT.js",
+    "name": "exports",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-link-DShgARNM.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-image-Vh3szJ6Z.js",
+      "_wui-list-item-DTEpzY6e.js",
+      "_wui-loading-spinner-C6lYZuiW.js",
+      "_wui-wallet-switch-CDeSzlef.js",
+      "_wui-separator-BUw-dPV9.js",
+      "_wui-shimmer-cBY4_GFX.js"
+    ]
+  },
+  "_exports-OzXcm-9f.js": {
+    "file": "_next/static/chunks/exports-OzXcm-9f.js",
+    "name": "exports",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js"
+    ]
+  },
+  "_features-DpxJoF4O.js": {
+    "file": "_next/static/chunks/features-DpxJoF4O.js",
+    "name": "features",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js"
+    ]
+  },
+  "_framework-DLdkyiLr.js": {
+    "file": "_next/static/chunks/framework-DLdkyiLr.js",
+    "name": "framework",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js"
+    ]
+  },
+  "_hooks.module-ZI1tgRAv.js": {
+    "file": "_next/static/chunks/hooks.module-ZI1tgRAv.js",
+    "name": "hooks.module",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js"
+    ]
+  },
+  "_property-DiAQyNY3.js": {
+    "file": "_next/static/chunks/property-DiAQyNY3.js",
+    "name": "property"
+  },
+  "_ref-C6YPRynk.js": {
+    "file": "_next/static/chunks/ref-C6YPRynk.js",
+    "name": "ref",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_rolldown-runtime-CNQZ8fZ1.js": {
+    "file": "_next/static/chunks/rolldown-runtime-CNQZ8fZ1.js",
+    "name": "rolldown-runtime"
+  },
+  "_utils-CgxU_3TU.js": {
+    "file": "_next/static/chunks/utils-CgxU_3TU.js",
+    "name": "utils"
+  },
+  "_verifyHash-DdiiNoWH.js": {
+    "file": "_next/static/chunks/verifyHash-DdiiNoWH.js",
+    "name": "verifyHash",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "virtual:vinext-app-browser-entry",
+      "_utils-CgxU_3TU.js"
+    ],
+    "dynamicImports": [
+      "_verifyHash-DdiiNoWH.js",
+      "_ccip-BPbeH7q2.js"
+    ]
+  },
+  "_w3m-activity-list-Bqlo_iKq.js": {
+    "file": "_next/static/chunks/w3m-activity-list-Bqlo_iKq.js",
+    "name": "w3m-activity-list",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-link-DRmX1H6G.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-shimmer-BAnohvHf.js",
+      "_wui-icon-box-Jm99dBYq.js"
+    ]
+  },
+  "_w3m-email-otp-widget-D111O30I.js": {
+    "file": "_next/static/chunks/w3m-email-otp-widget-D111O30I.js",
+    "name": "w3m-email-otp-widget",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_wui-link-DRmX1H6G.js",
+      "_wui-loading-spinner-C6lYZuiW.js"
+    ]
+  },
+  "_w3m-onramp-providers-footer-CLaUmgp6.js": {
+    "file": "_next/static/chunks/w3m-onramp-providers-footer-CLaUmgp6.js",
+    "name": "w3m-onramp-providers-footer",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-link-DRmX1H6G.js"
+    ]
+  },
+  "_w3m-tooltip-Ctn70242.js": {
+    "file": "_next/static/chunks/w3m-tooltip-Ctn70242.js",
+    "name": "w3m-tooltip",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_wui-icon-CC7Hfwzk.js"
+    ]
+  },
+  "_wallet-appkit-M4RPKu4o.js": {
+    "file": "_next/static/chunks/wallet-appkit-M4RPKu4o.js",
+    "name": "wallet-appkit",
+    "imports": [
+      "virtual:vinext-app-browser-entry"
+    ],
+    "dynamicImports": [
+      "node_modules/.pnpm/@reown+appkit@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-color@1_88495c3c498e6e0e8d72a5ab7be670aa/node_modules/@reown/appkit/dist/esm/exports/networks.js",
+      "node_modules/.pnpm/@reown+appkit@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-color@1_88495c3c498e6e0e8d72a5ab7be670aa/node_modules/@reown/appkit/dist/esm/exports/index.js",
+      "node_modules/.pnpm/@reown+appkit-adapter-wagmi@1.8.23_@tanstack+react-query@5.102.8_react@19.2.6__@types+r_192a503d303086a5646b3ee0cc578d1e/node_modules/@reown/appkit-adapter-wagmi/dist/esm/src/index.js"
+    ]
+  },
+  "_writeContract-CrqGJI8Q.js": {
+    "file": "_next/static/chunks/writeContract-CrqGJI8Q.js",
+    "name": "writeContract",
+    "imports": [
+      "_verifyHash-DdiiNoWH.js"
+    ]
+  },
+  "_wui-avatar-CGaoguZp.js": {
+    "file": "_next/static/chunks/wui-avatar-CGaoguZp.js",
+    "name": "wui-avatar",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_wui-image-CPInvSw0.js"
+    ]
+  },
+  "_wui-button-DzuYjpBE.js": {
+    "file": "_next/static/chunks/wui-button-DzuYjpBE.js",
+    "name": "wui-button",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_wui-loading-spinner-yPOgR9Mq.js"
+    ]
+  },
+  "_wui-email-input-D-_Qs8_p.js": {
+    "file": "_next/static/chunks/wui-email-input-D-_Qs8_p.js",
+    "name": "wui-email-input",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_wui-input-text-Gnafwmyl.js"
+    ]
+  },
+  "_wui-icon-CC7Hfwzk.js": {
+    "file": "_next/static/chunks/wui-icon-CC7Hfwzk.js",
+    "name": "wui-icon",
+    "imports": [
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-icon-box-D9yPdlpu.js": {
+    "file": "_next/static/chunks/wui-icon-box-D9yPdlpu.js",
+    "name": "wui-icon-box",
+    "imports": [
+      "_wui-icon-box-Jm99dBYq.js"
+    ]
+  },
+  "_wui-icon-box-Jm99dBYq.js": {
+    "file": "_next/static/chunks/wui-icon-box-Jm99dBYq.js",
+    "name": "wui-icon-box",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-icon-link-DShgARNM.js": {
+    "file": "_next/static/chunks/wui-icon-link-DShgARNM.js",
+    "name": "wui-icon-link",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-image-CPInvSw0.js": {
+    "file": "_next/static/chunks/wui-image-CPInvSw0.js",
+    "name": "wui-image",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-image-Vh3szJ6Z.js": {
+    "file": "_next/static/chunks/wui-image-Vh3szJ6Z.js",
+    "name": "wui-image",
+    "imports": [
+      "_wui-image-CPInvSw0.js"
+    ]
+  },
+  "_wui-input-amount-Dl3xI5Em.js": {
+    "file": "_next/static/chunks/wui-input-amount-Dl3xI5Em.js",
+    "name": "wui-input-amount",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ref-C6YPRynk.js"
+    ]
+  },
+  "_wui-input-text-C9uVIgNP.js": {
+    "file": "_next/static/chunks/wui-input-text-C9uVIgNP.js",
+    "name": "wui-input-text",
+    "imports": [
+      "_wui-input-text-Gnafwmyl.js"
+    ]
+  },
+  "_wui-input-text-Gnafwmyl.js": {
+    "file": "_next/static/chunks/wui-input-text-Gnafwmyl.js",
+    "name": "wui-input-text",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ref-C6YPRynk.js"
+    ]
+  },
+  "_wui-link-DRmX1H6G.js": {
+    "file": "_next/static/chunks/wui-link-DRmX1H6G.js",
+    "name": "wui-link",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-list-item-DTEpzY6e.js": {
+    "file": "_next/static/chunks/wui-list-item-DTEpzY6e.js",
+    "name": "wui-list-item",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_wui-loading-spinner-yPOgR9Mq.js"
+    ]
+  },
+  "_wui-list-social-DyaJ3Ami.js": {
+    "file": "_next/static/chunks/wui-list-social-DyaJ3Ami.js",
+    "name": "wui-list-social",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js"
+    ]
+  },
+  "_wui-list-token-DALp2V9D.js": {
+    "file": "_next/static/chunks/wui-list-token-DALp2V9D.js",
+    "name": "wui-list-token",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_wui-image-CPInvSw0.js"
+    ]
+  },
+  "_wui-list-wallet-BxMVBnLH.js": {
+    "file": "_next/static/chunks/wui-list-wallet-BxMVBnLH.js",
+    "name": "wui-list-wallet",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_w3m-onramp-providers-footer-CLaUmgp6.js",
+      "_HelpersUtil-D1YyiXjK.js",
+      "_wui-wallet-switch-CDeSzlef.js",
+      "_wui-icon-box-Jm99dBYq.js"
+    ]
+  },
+  "_wui-loading-spinner-C6lYZuiW.js": {
+    "file": "_next/static/chunks/wui-loading-spinner-C6lYZuiW.js",
+    "name": "wui-loading-spinner",
+    "imports": [
+      "_wui-loading-spinner-yPOgR9Mq.js"
+    ]
+  },
+  "_wui-loading-spinner-yPOgR9Mq.js": {
+    "file": "_next/static/chunks/wui-loading-spinner-yPOgR9Mq.js",
+    "name": "wui-loading-spinner",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-loading-thumbnail-7l0YHO0R.js": {
+    "file": "_next/static/chunks/wui-loading-thumbnail-7l0YHO0R.js",
+    "name": "wui-loading-thumbnail",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_ref-C6YPRynk.js"
+    ]
+  },
+  "_wui-qr-code-CxTsJGR0.js": {
+    "file": "_next/static/chunks/wui-qr-code-CxTsJGR0.js",
+    "name": "wui-qr-code",
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_wui-image-CPInvSw0.js"
+    ]
+  },
+  "_wui-separator-BUw-dPV9.js": {
+    "file": "_next/static/chunks/wui-separator-BUw-dPV9.js",
+    "name": "wui-separator",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-shimmer-BAnohvHf.js": {
+    "file": "_next/static/chunks/wui-shimmer-BAnohvHf.js",
+    "name": "wui-shimmer",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-shimmer-cBY4_GFX.js": {
+    "file": "_next/static/chunks/wui-shimmer-cBY4_GFX.js",
+    "name": "wui-shimmer",
+    "imports": [
+      "_wui-shimmer-BAnohvHf.js"
+    ]
+  },
+  "_wui-text-JiSAUhpb.js": {
+    "file": "_next/static/chunks/wui-text-JiSAUhpb.js",
+    "name": "wui-text",
+    "imports": [
+      "virtual:vinext-app-browser-entry",
+      "_exports-OzXcm-9f.js"
+    ],
+    "dynamicImports": [
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowCircleDown.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowClockwise.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowDown.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowLeft.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowRight.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowSquareOut.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsDownUp.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsLeftRight.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowUp.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowUpRight.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsClockwise.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhBank.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhBrowser.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretDown.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretLeft.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretRight.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretUp.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCheck.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCircleHalf.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhClock.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCompass.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCopy.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCreditCard.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCurrencyDollar.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDesktop.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDeviceMobile.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDotsThree.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhVault.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhEnvelope.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhFunnelSimple.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhGlobe.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhIdentificationCard.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhImage.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhInfo.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhLightbulb.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhMagnifyingGlass.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPaperPlaneRight.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPlus.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPower.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPuzzlePiece.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQrCode.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQuestion.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQuestionMark.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSealCheck.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSignOut.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSpinner.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhTrash.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhUser.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWallet.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWarning.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWarningCircle.mjs",
+      "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhX.mjs"
+    ]
+  },
+  "_wui-token-button-NArBzTcf.js": {
+    "file": "_next/static/chunks/wui-token-button-NArBzTcf.js",
+    "name": "wui-token-button",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-shimmer-BAnohvHf.js"
+    ]
+  },
+  "_wui-visual-gRlSovid.js": {
+    "file": "_next/static/chunks/wui-visual-gRlSovid.js",
+    "name": "wui-visual",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js"
+    ]
+  },
+  "_wui-wallet-switch-CDeSzlef.js": {
+    "file": "_next/static/chunks/wui-wallet-switch-CDeSzlef.js",
+    "name": "wui-wallet-switch",
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-icon-box-Jm99dBYq.js"
+    ]
+  },
+  "_zora-oAvo-EKJ.js": {
+    "file": "_next/static/chunks/zora-oAvo-EKJ.js",
+    "name": "zora",
+    "imports": [
+      "_verifyHash-DdiiNoWH.js"
+    ]
+  },
+  "app/LanguageProvider.tsx": {
+    "file": "_next/static/chunks/LanguageProvider-DOY5lAb8.js",
+    "name": "LanguageProvider",
+    "src": "app/LanguageProvider.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_framework-DLdkyiLr.js"
+    ]
+  },
+  "app/page.tsx": {
+    "file": "_next/static/chunks/page-oOo9W5Af.js",
+    "name": "page",
+    "src": "app/page.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "virtual:vinext-app-browser-entry",
+      "_AppChrome-Co-5rjeh.js",
+      "app/LanguageProvider.tsx",
+      "_wallet-appkit-M4RPKu4o.js",
+      "_framework-DLdkyiLr.js"
+    ]
+  },
+  "app/receive/page.tsx": {
+    "file": "_next/static/chunks/page-BiFWfoBj.js",
+    "name": "page",
+    "src": "app/receive/page.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_AppChrome-Co-5rjeh.js",
+      "app/LanguageProvider.tsx",
+      "_framework-DLdkyiLr.js"
+    ]
+  },
+  "app/transactions/page.tsx": {
+    "file": "_next/static/chunks/page-ySb5m7jY.js",
+    "name": "page",
+    "src": "app/transactions/page.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_AppChrome-Co-5rjeh.js",
+      "app/LanguageProvider.tsx",
+      "_wallet-appkit-M4RPKu4o.js",
+      "_verifyHash-DdiiNoWH.js",
+      "__esm-B1J65awx.js",
+      "_framework-DLdkyiLr.js"
+    ]
+  },
+  "node_modules/.pnpm/@base-org+account@2.4.0_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-colo_b1fd258d5e913c722f30c4e364270c8f/node_modules/@base-org/account/dist/index.js": {
+    "file": "_next/static/chunks/dist-ybvjGIlb.js",
+    "name": "dist",
+    "src": "node_modules/.pnpm/@base-org+account@2.4.0_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-colo_b1fd258d5e913c722f30c4e364270c8f/node_modules/@base-org/account/dist/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_verifyHash-DdiiNoWH.js",
+      "_dist-BceXAijR.js",
+      "_hooks.module-ZI1tgRAv.js",
+      "_eventemitter3-B2Qegys9.js",
+      "__esm-B1J65awx.js",
+      "_zora-oAvo-EKJ.js",
+      "_ccip-BPbeH7q2.js"
+    ]
+  },
+  "node_modules/.pnpm/@coinbase+wallet-sdk@3.9.3_supports-color@10.2.2/node_modules/@coinbase/wallet-sdk/dist/index.js": {
+    "file": "_next/static/chunks/dist-CGPDFgXO.js",
+    "name": "dist",
+    "src": "node_modules/.pnpm/@coinbase+wallet-sdk@3.9.3_supports-color@10.2.2/node_modules/@coinbase/wallet-sdk/dist/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_hooks.module-ZI1tgRAv.js",
+      "_eventemitter3-J7lIyi5f.js"
+    ]
+  },
+  "node_modules/.pnpm/@coinbase+wallet-sdk@4.3.6_@types+react@19.2.14_bufferutil@4.1.0_react@19.2.6_typescrip_225f924947afe2b4ef90f821b63459f5/node_modules/@coinbase/wallet-sdk/dist/index.js": {
+    "file": "_next/static/chunks/dist-avyiBaMX.js",
+    "name": "dist",
+    "src": "node_modules/.pnpm/@coinbase+wallet-sdk@4.3.6_@types+react@19.2.14_bufferutil@4.1.0_react@19.2.6_typescrip_225f924947afe2b4ef90f821b63459f5/node_modules/@coinbase/wallet-sdk/dist/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_verifyHash-DdiiNoWH.js",
+      "_dist-BceXAijR.js",
+      "_hooks.module-ZI1tgRAv.js",
+      "_eventemitter3-B2Qegys9.js",
+      "__esm-B1J65awx.js",
+      "_ccip-BPbeH7q2.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowCircleDown.mjs": {
+    "file": "_next/static/chunks/PhArrowCircleDown-nN4EAb5Z.js",
+    "name": "PhArrowCircleDown",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowCircleDown.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowClockwise.mjs": {
+    "file": "_next/static/chunks/PhArrowClockwise-C-lUUhAV.js",
+    "name": "PhArrowClockwise",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowClockwise.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowDown.mjs": {
+    "file": "_next/static/chunks/PhArrowDown-BzdqRuA8.js",
+    "name": "PhArrowDown",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowDown.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowLeft.mjs": {
+    "file": "_next/static/chunks/PhArrowLeft-DRI5JkTN.js",
+    "name": "PhArrowLeft",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowLeft.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowRight.mjs": {
+    "file": "_next/static/chunks/PhArrowRight-W5tpLYJQ.js",
+    "name": "PhArrowRight",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowRight.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowSquareOut.mjs": {
+    "file": "_next/static/chunks/PhArrowSquareOut-b6s33Tdx.js",
+    "name": "PhArrowSquareOut",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowSquareOut.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowUp.mjs": {
+    "file": "_next/static/chunks/PhArrowUp-DIJzPkXk.js",
+    "name": "PhArrowUp",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowUp.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowUpRight.mjs": {
+    "file": "_next/static/chunks/PhArrowUpRight-CstFMQGq.js",
+    "name": "PhArrowUpRight",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowUpRight.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsClockwise.mjs": {
+    "file": "_next/static/chunks/PhArrowsClockwise-B59XoJmS.js",
+    "name": "PhArrowsClockwise",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsClockwise.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsDownUp.mjs": {
+    "file": "_next/static/chunks/PhArrowsDownUp-Cw0dXJ4i.js",
+    "name": "PhArrowsDownUp",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsDownUp.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsLeftRight.mjs": {
+    "file": "_next/static/chunks/PhArrowsLeftRight-Bty0krTv.js",
+    "name": "PhArrowsLeftRight",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhArrowsLeftRight.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhBank.mjs": {
+    "file": "_next/static/chunks/PhBank-DE3MI7gk.js",
+    "name": "PhBank",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhBank.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhBrowser.mjs": {
+    "file": "_next/static/chunks/PhBrowser-wbT3JFfQ.js",
+    "name": "PhBrowser",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhBrowser.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretDown.mjs": {
+    "file": "_next/static/chunks/PhCaretDown-CJnGn4Wj.js",
+    "name": "PhCaretDown",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretDown.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretLeft.mjs": {
+    "file": "_next/static/chunks/PhCaretLeft-DaXJa0tl.js",
+    "name": "PhCaretLeft",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretLeft.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretRight.mjs": {
+    "file": "_next/static/chunks/PhCaretRight-BnjNTKKu.js",
+    "name": "PhCaretRight",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretRight.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretUp.mjs": {
+    "file": "_next/static/chunks/PhCaretUp-D7rFcb7k.js",
+    "name": "PhCaretUp",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCaretUp.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCheck.mjs": {
+    "file": "_next/static/chunks/PhCheck-DtV3MiI0.js",
+    "name": "PhCheck",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCheck.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCircleHalf.mjs": {
+    "file": "_next/static/chunks/PhCircleHalf-BUAShIG2.js",
+    "name": "PhCircleHalf",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCircleHalf.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhClock.mjs": {
+    "file": "_next/static/chunks/PhClock-Dc199Hha.js",
+    "name": "PhClock",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhClock.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCompass.mjs": {
+    "file": "_next/static/chunks/PhCompass-CzBxcjnI.js",
+    "name": "PhCompass",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCompass.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCopy.mjs": {
+    "file": "_next/static/chunks/PhCopy-HbszvSbp.js",
+    "name": "PhCopy",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCopy.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCreditCard.mjs": {
+    "file": "_next/static/chunks/PhCreditCard-32n_1Jhu.js",
+    "name": "PhCreditCard",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCreditCard.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCurrencyDollar.mjs": {
+    "file": "_next/static/chunks/PhCurrencyDollar-DLsRw_Yv.js",
+    "name": "PhCurrencyDollar",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhCurrencyDollar.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDesktop.mjs": {
+    "file": "_next/static/chunks/PhDesktop-ckFZPLkx.js",
+    "name": "PhDesktop",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDesktop.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDeviceMobile.mjs": {
+    "file": "_next/static/chunks/PhDeviceMobile-B9x0Usn2.js",
+    "name": "PhDeviceMobile",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDeviceMobile.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDotsThree.mjs": {
+    "file": "_next/static/chunks/PhDotsThree-kRCDk70W.js",
+    "name": "PhDotsThree",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhDotsThree.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhEnvelope.mjs": {
+    "file": "_next/static/chunks/PhEnvelope-5en87726.js",
+    "name": "PhEnvelope",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhEnvelope.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhFunnelSimple.mjs": {
+    "file": "_next/static/chunks/PhFunnelSimple-BlL45MrS.js",
+    "name": "PhFunnelSimple",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhFunnelSimple.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhGlobe.mjs": {
+    "file": "_next/static/chunks/PhGlobe-DORML7QY.js",
+    "name": "PhGlobe",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhGlobe.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhIdentificationCard.mjs": {
+    "file": "_next/static/chunks/PhIdentificationCard-BikNFyJC.js",
+    "name": "PhIdentificationCard",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhIdentificationCard.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhImage.mjs": {
+    "file": "_next/static/chunks/PhImage-DH7o5YxT.js",
+    "name": "PhImage",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhImage.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhInfo.mjs": {
+    "file": "_next/static/chunks/PhInfo-C_xXw33L.js",
+    "name": "PhInfo",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhInfo.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhLightbulb.mjs": {
+    "file": "_next/static/chunks/PhLightbulb-ClXGXUs4.js",
+    "name": "PhLightbulb",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhLightbulb.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhMagnifyingGlass.mjs": {
+    "file": "_next/static/chunks/PhMagnifyingGlass-KjoKn2jm.js",
+    "name": "PhMagnifyingGlass",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhMagnifyingGlass.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPaperPlaneRight.mjs": {
+    "file": "_next/static/chunks/PhPaperPlaneRight-VVW1Bip1.js",
+    "name": "PhPaperPlaneRight",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPaperPlaneRight.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPlus.mjs": {
+    "file": "_next/static/chunks/PhPlus-DjQdBVKu.js",
+    "name": "PhPlus",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPlus.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPower.mjs": {
+    "file": "_next/static/chunks/PhPower-D9TTv38B.js",
+    "name": "PhPower",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPower.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPuzzlePiece.mjs": {
+    "file": "_next/static/chunks/PhPuzzlePiece-BjsAH5cX.js",
+    "name": "PhPuzzlePiece",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhPuzzlePiece.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQrCode.mjs": {
+    "file": "_next/static/chunks/PhQrCode-DiGkZFdZ.js",
+    "name": "PhQrCode",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQrCode.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQuestion.mjs": {
+    "file": "_next/static/chunks/PhQuestion-DaJK0h_H.js",
+    "name": "PhQuestion",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQuestion.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQuestionMark.mjs": {
+    "file": "_next/static/chunks/PhQuestionMark-pA8R-pIo.js",
+    "name": "PhQuestionMark",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhQuestionMark.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSealCheck.mjs": {
+    "file": "_next/static/chunks/PhSealCheck-Cqcl0QBq.js",
+    "name": "PhSealCheck",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSealCheck.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSignOut.mjs": {
+    "file": "_next/static/chunks/PhSignOut-B6D1krcJ.js",
+    "name": "PhSignOut",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSignOut.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSpinner.mjs": {
+    "file": "_next/static/chunks/PhSpinner-DWSTRTO5.js",
+    "name": "PhSpinner",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhSpinner.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhTrash.mjs": {
+    "file": "_next/static/chunks/PhTrash-C6Xf9Irl.js",
+    "name": "PhTrash",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhTrash.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhUser.mjs": {
+    "file": "_next/static/chunks/PhUser-CAvcYHG8.js",
+    "name": "PhUser",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhUser.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhVault.mjs": {
+    "file": "_next/static/chunks/PhVault-FGyTgePu.js",
+    "name": "PhVault",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhVault.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWallet.mjs": {
+    "file": "_next/static/chunks/PhWallet-Cz40AeYh.js",
+    "name": "PhWallet",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWallet.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWarning.mjs": {
+    "file": "_next/static/chunks/PhWarning-Sxyvpi_Z.js",
+    "name": "PhWarning",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWarning.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWarningCircle.mjs": {
+    "file": "_next/static/chunks/PhWarningCircle-CTLcq8pG.js",
+    "name": "PhWarningCircle",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhWarningCircle.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhX.mjs": {
+    "file": "_next/static/chunks/PhX-CQrI4T3-.js",
+    "name": "PhX",
+    "src": "node_modules/.pnpm/@phosphor-icons+webcomponents@2.1.5/node_modules/@phosphor-icons/webcomponents/dist/icons/PhX.mjs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_property-DiAQyNY3.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-adapter-wagmi@1.8.23_@tanstack+react-query@5.102.8_react@19.2.6__@types+r_192a503d303086a5646b3ee0cc578d1e/node_modules/@reown/appkit-adapter-wagmi/dist/esm/src/index.js": {
+    "file": "_next/static/chunks/src-CIEqeBYa.js",
+    "name": "src",
+    "src": "node_modules/.pnpm/@reown+appkit-adapter-wagmi@1.8.23_@tanstack+react-query@5.102.8_react@19.2.6__@types+r_192a503d303086a5646b3ee0cc578d1e/node_modules/@reown/appkit-adapter-wagmi/dist/esm/src/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "virtual:vinext-app-browser-entry",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_verifyHash-DdiiNoWH.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_createConnector-B637JEuD.js",
+      "_eventemitter3-B2Qegys9.js",
+      "__esm-B1J65awx.js",
+      "_writeContract-CrqGJI8Q.js"
+    ],
+    "dynamicImports": [
+      "node_modules/.pnpm/@wagmi+connectors@6.2.0_@tanstack+react-query@5.102.8_react@19.2.6__@types+react@19.2.1_79375ad32e5602ba66d9f4ee1c8cade9/node_modules/@wagmi/connectors/dist/esm/exports/index.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/email.js": {
+    "file": "_next/static/chunks/email-C--1KZm4.js",
+    "name": "email",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/email.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_w3m-email-otp-widget-D111O30I.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-email-input-D-_Qs8_p.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-link-DRmX1H6G.js",
+      "_ref-C6YPRynk.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/embedded-wallet.js": {
+    "file": "_next/static/chunks/embedded-wallet-BUq5JOjS.js",
+    "name": "embedded-wallet",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/embedded-wallet.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_NavigationUtil-B34l43F0.js",
+      "_HelpersUtil-D1YyiXjK.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-icon-link-DShgARNM.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-link-DRmX1H6G.js",
+      "_wui-loading-spinner-C6lYZuiW.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-loading-spinner-yPOgR9Mq.js",
+      "_wui-input-text-Gnafwmyl.js",
+      "_ref-C6YPRynk.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/index.js": {
+    "file": "_next/static/chunks/exports-Ck_UN6_n.js",
+    "name": "exports",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_NavigationUtil-B34l43F0.js",
+      "_ExchangeController-CodRfQDo.js",
+      "_wui-loading-thumbnail-7l0YHO0R.js",
+      "_w3m-tooltip-Ctn70242.js",
+      "_wui-list-social-DyaJ3Ami.js",
+      "_wui-list-wallet-BxMVBnLH.js",
+      "_w3m-activity-list-Bqlo_iKq.js",
+      "_w3m-onramp-providers-footer-CLaUmgp6.js",
+      "_HelpersUtil-D1YyiXjK.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-email-input-D-_Qs8_p.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-icon-link-DShgARNM.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-input-text-C9uVIgNP.js",
+      "_wui-link-DRmX1H6G.js",
+      "_wui-list-item-DTEpzY6e.js",
+      "_wui-list-token-DALp2V9D.js",
+      "_wui-loading-spinner-C6lYZuiW.js",
+      "_wui-wallet-switch-CDeSzlef.js",
+      "_wui-qr-code-CxTsJGR0.js",
+      "_wui-separator-BUw-dPV9.js",
+      "_wui-shimmer-cBY4_GFX.js",
+      "_wui-visual-gRlSovid.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-loading-spinner-yPOgR9Mq.js",
+      "_wui-shimmer-BAnohvHf.js",
+      "_wui-avatar-CGaoguZp.js",
+      "_wui-icon-box-Jm99dBYq.js",
+      "_wui-input-text-Gnafwmyl.js",
+      "_ref-C6YPRynk.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/onramp.js": {
+    "file": "_next/static/chunks/onramp-ChJtYMJJ.js",
+    "name": "onramp",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/onramp.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_OnRampController-B7FCmMnN.js",
+      "_wui-loading-thumbnail-7l0YHO0R.js",
+      "_w3m-onramp-providers-footer-CLaUmgp6.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-image-Vh3szJ6Z.js",
+      "_wui-input-text-C9uVIgNP.js",
+      "_wui-link-DRmX1H6G.js",
+      "_wui-list-item-DTEpzY6e.js",
+      "_wui-loading-spinner-C6lYZuiW.js",
+      "_wui-visual-gRlSovid.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/pay-with-exchange.js": {
+    "file": "_next/static/chunks/pay-with-exchange-TKURMWgx.js",
+    "name": "pay-with-exchange",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/pay-with-exchange.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_ExchangeController-CodRfQDo.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-icon-link-DShgARNM.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-image-Vh3szJ6Z.js",
+      "_wui-input-amount-Dl3xI5Em.js",
+      "_wui-input-text-C9uVIgNP.js",
+      "_wui-link-DRmX1H6G.js",
+      "_wui-list-item-DTEpzY6e.js",
+      "_wui-list-token-DALp2V9D.js",
+      "_wui-separator-BUw-dPV9.js",
+      "_wui-shimmer-cBY4_GFX.js",
+      "_wui-image-CPInvSw0.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/receive.js": {
+    "file": "_next/static/chunks/receive-WAvMaOx0.js",
+    "name": "receive",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/receive.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_wui-qr-code-CxTsJGR0.js",
+      "_wui-image-CPInvSw0.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/reown-authentication/data-capture.js": {
+    "file": "_next/static/chunks/data-capture-BYBxlt1i.js",
+    "name": "data-capture",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/reown-authentication/data-capture.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_features-DpxJoF4O.js",
+      "_w3m-email-otp-widget-D111O30I.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/send.js": {
+    "file": "_next/static/chunks/send-BcYskjKo.js",
+    "name": "send",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/send.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_SwapController-BipbHG4W.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-input-amount-Dl3xI5Em.js",
+      "_wui-input-text-C9uVIgNP.js",
+      "_wui-link-DRmX1H6G.js",
+      "_wui-list-token-DALp2V9D.js",
+      "_wui-separator-BUw-dPV9.js",
+      "_wui-token-button-NArBzTcf.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-avatar-CGaoguZp.js",
+      "_ref-C6YPRynk.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/socials.js": {
+    "file": "_next/static/chunks/socials-DILZXW7K.js",
+    "name": "socials",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/socials.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_wui-loading-thumbnail-7l0YHO0R.js",
+      "_wui-list-social-DyaJ3Ami.js",
+      "_ConstantsUtil-CRB3PS0g.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-qr-code-CxTsJGR0.js",
+      "_wui-shimmer-cBY4_GFX.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/swaps.js": {
+    "file": "_next/static/chunks/swaps-CQ5XC3if.js",
+    "name": "swaps",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/swaps.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_SwapController-BipbHG4W.js",
+      "_w3m-tooltip-Ctn70242.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-box-D9yPdlpu.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-input-text-C9uVIgNP.js",
+      "_wui-shimmer-cBY4_GFX.js",
+      "_wui-token-button-NArBzTcf.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-shimmer-BAnohvHf.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/transactions.js": {
+    "file": "_next/static/chunks/transactions-DBdVTcO8.js",
+    "name": "transactions",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/transactions.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_w3m-activity-list-Bqlo_iKq.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/w3m-modal.js": {
+    "file": "_next/static/chunks/w3m-modal-DbI18PP8.js",
+    "name": "w3m-modal",
+    "src": "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/w3m-modal.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_exports-OzXcm-9f.js",
+      "_wui-text-JiSAUhpb.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_SwapController-BipbHG4W.js",
+      "_w3m-tooltip-Ctn70242.js",
+      "_exports-BMuMYkvT.js",
+      "_wui-list-wallet-BxMVBnLH.js",
+      "_ConstantsUtil-CRB3PS0g.js",
+      "_HelpersUtil-D1YyiXjK.js",
+      "_wui-button-DzuYjpBE.js",
+      "_wui-icon-CC7Hfwzk.js",
+      "_wui-image-CPInvSw0.js",
+      "_wui-loading-spinner-yPOgR9Mq.js",
+      "_wui-icon-box-Jm99dBYq.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-color@1_88495c3c498e6e0e8d72a5ab7be670aa/node_modules/@reown/appkit/dist/esm/exports/index.js": {
+    "file": "_next/static/chunks/exports-V7c3byu6.js",
+    "name": "exports",
+    "src": "node_modules/.pnpm/@reown+appkit@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-color@1_88495c3c498e6e0e8d72a5ab7be670aa/node_modules/@reown/appkit/dist/esm/exports/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "virtual:vinext-app-browser-entry",
+      "_exports-OzXcm-9f.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js",
+      "_verifyHash-DdiiNoWH.js",
+      "_ModalController-KQ_YxXdx.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_OnRampController-B7FCmMnN.js",
+      "_ExchangeUtil-CtY53trl.js"
+    ],
+    "dynamicImports": [
+      "_features-DpxJoF4O.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/embedded-wallet.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/email.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/socials.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/swaps.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/send.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/receive.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/onramp.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/pay-with-exchange.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/transactions.js",
+      "_exports-BMuMYkvT.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/reown-authentication/data-capture.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/index.js",
+      "node_modules/.pnpm/@reown+appkit-scaffold-ui@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supp_3c4d2a9878366f1798475bf9c8615c11/node_modules/@reown/appkit-scaffold-ui/dist/esm/exports/w3m-modal.js"
+    ]
+  },
+  "node_modules/.pnpm/@reown+appkit@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-color@1_88495c3c498e6e0e8d72a5ab7be670aa/node_modules/@reown/appkit/dist/esm/exports/networks.js": {
+    "file": "_next/static/chunks/networks-B8vFVkcI.js",
+    "name": "networks",
+    "src": "node_modules/.pnpm/@reown+appkit@1.8.23_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-color@1_88495c3c498e6e0e8d72a5ab7be670aa/node_modules/@reown/appkit/dist/esm/exports/networks.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_verifyHash-DdiiNoWH.js",
+      "_NetworkUtil-krbWRpls.js",
+      "_writeContract-CrqGJI8Q.js",
+      "_zora-oAvo-EKJ.js"
+    ]
+  },
+  "node_modules/.pnpm/@safe-global+safe-apps-provider@0.18.6_bufferutil@4.1.0_typescript@5.9.3_utf-8-validate@5.0.10_zod@3.25.76/node_modules/@safe-global/safe-apps-provider/dist/index.js": {
+    "file": "_next/static/chunks/dist-BOKrraZO.js",
+    "name": "dist",
+    "src": "node_modules/.pnpm/@safe-global+safe-apps-provider@0.18.6_bufferutil@4.1.0_typescript@5.9.3_utf-8-validate@5.0.10_zod@3.25.76/node_modules/@safe-global/safe-apps-provider/dist/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_W3MFrameProviderSingleton-B0TNkMtn.js"
+    ]
+  },
+  "node_modules/.pnpm/@safe-global+safe-apps-sdk@9.1.0_bufferutil@4.1.0_typescript@5.9.3_utf-8-validate@5.0.10_zod@3.25.76/node_modules/@safe-global/safe-apps-sdk/dist/esm/index.js": {
+    "file": "_next/static/chunks/esm-BsN9HCD_.js",
+    "name": "esm",
+    "src": "node_modules/.pnpm/@safe-global+safe-apps-sdk@9.1.0_bufferutil@4.1.0_typescript@5.9.3_utf-8-validate@5.0.10_zod@3.25.76/node_modules/@safe-global/safe-apps-sdk/dist/esm/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_verifyHash-DdiiNoWH.js"
+    ]
+  },
+  "node_modules/.pnpm/@wagmi+connectors@6.2.0_@tanstack+react-query@5.102.8_react@19.2.6__@types+react@19.2.1_79375ad32e5602ba66d9f4ee1c8cade9/node_modules/@wagmi/connectors/dist/esm/exports/index.js": {
+    "file": "_next/static/chunks/exports-DMy-ZrMH.js",
+    "name": "exports",
+    "src": "node_modules/.pnpm/@wagmi+connectors@6.2.0_@tanstack+react-query@5.102.8_react@19.2.6__@types+react@19.2.1_79375ad32e5602ba66d9f4ee1c8cade9/node_modules/@wagmi/connectors/dist/esm/exports/index.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "virtual:vinext-app-browser-entry",
+      "_verifyHash-DdiiNoWH.js",
+      "node_modules/.pnpm/@reown+appkit-adapter-wagmi@1.8.23_@tanstack+react-query@5.102.8_react@19.2.6__@types+r_192a503d303086a5646b3ee0cc578d1e/node_modules/@reown/appkit-adapter-wagmi/dist/esm/src/index.js",
+      "_createConnector-B637JEuD.js",
+      "__esm-B1J65awx.js"
+    ],
+    "dynamicImports": [
+      "node_modules/.pnpm/@base-org+account@2.4.0_@types+react@19.2.14_bufferutil@4.1.0_debug@4.4.3_supports-colo_b1fd258d5e913c722f30c4e364270c8f/node_modules/@base-org/account/dist/index.js",
+      "node_modules/.pnpm/@coinbase+wallet-sdk@4.3.6_@types+react@19.2.14_bufferutil@4.1.0_react@19.2.6_typescrip_225f924947afe2b4ef90f821b63459f5/node_modules/@coinbase/wallet-sdk/dist/index.js",
+      "node_modules/.pnpm/@coinbase+wallet-sdk@3.9.3_supports-color@10.2.2/node_modules/@coinbase/wallet-sdk/dist/index.js",
+      "node_modules/.pnpm/@safe-global+safe-apps-sdk@9.1.0_bufferutil@4.1.0_typescript@5.9.3_utf-8-validate@5.0.10_zod@3.25.76/node_modules/@safe-global/safe-apps-sdk/dist/esm/index.js",
+      "node_modules/.pnpm/@safe-global+safe-apps-provider@0.18.6_bufferutil@4.1.0_typescript@5.9.3_utf-8-validate@5.0.10_zod@3.25.76/node_modules/@safe-global/safe-apps-provider/dist/index.js"
+    ]
+  },
+  "node_modules/.pnpm/vinext@1.0.0-beta.2_@vitejs+plugin-react@6.0.2_vite@8.0.13_@types+node@22.19.19_esbuild_c6b08ce8379e8f9f04d528dd392a4566/node_modules/vinext/dist/shims/layout-segment-context.js": {
+    "file": "_next/static/chunks/layout-segment-context-B0NXgfMq.js",
+    "name": "layout-segment-context",
+    "src": "node_modules/.pnpm/vinext@1.0.0-beta.2_@vitejs+plugin-react@6.0.2_vite@8.0.13_@types+node@22.19.19_esbuild_c6b08ce8379e8f9f04d528dd392a4566/node_modules/vinext/dist/shims/layout-segment-context.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "virtual:vinext-app-browser-entry",
+      "_framework-DLdkyiLr.js"
+    ]
+  },
+  "virtual:vinext-app-browser-entry": {
+    "file": "_next/static/chunks/index-CPLNP8u_.js",
+    "name": "index",
+    "src": "virtual:vinext-app-browser-entry",
+    "isEntry": true,
+    "imports": [
+      "_rolldown-runtime-CNQZ8fZ1.js",
+      "_framework-DLdkyiLr.js"
+    ],
+    "dynamicImports": [
+      "app/LanguageProvider.tsx",
+      "virtual:vinext-app-browser-entry",
+      "app/page.tsx",
+      "app/transactions/page.tsx",
+      "app/receive/page.tsx",
+      "node_modules/.pnpm/vinext@1.0.0-beta.2_@vitejs+plugin-react@6.0.2_vite@8.0.13_@types+node@22.19.19_esbuild_c6b08ce8379e8f9f04d528dd392a4566/node_modules/vinext/dist/shims/layout-segment-context.js"
+    ]
+  }
+}

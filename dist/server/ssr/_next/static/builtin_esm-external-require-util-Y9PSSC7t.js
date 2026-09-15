@@ -1,0 +1,1 @@
+import{m as e}from"../../index.js";import*as t from"buffer";import*as n from"util";var r=e(((e,n)=>{n.exports=t.default})),i=e(((e,t)=>{t.exports=n.default}));export{r as n,i as t};

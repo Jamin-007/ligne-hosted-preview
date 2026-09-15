@@ -37,7 +37,8 @@ yarn-error.log*
 # vercel
 .vercel
 
-/dist/
+# Render's production service uses the audited precompiled Vinext output to
+# stay within the free-tier build timeout.
 /.wrangler/
 /outputs/
 /work/

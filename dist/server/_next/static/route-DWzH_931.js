@@ -1,0 +1,1 @@
+import{o as e}from"./demo-backend-DBG6gnrR.js";async function t(){return e()}export{t as GET};

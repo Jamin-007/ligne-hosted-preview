@@ -1,0 +1,1 @@
+import{env as e}from"cloudflare:workers";async function t(){let t=e.REOWN_PROJECT_ID?.trim();return t?Response.json({projectId:t},{headers:{"cache-control":`public, max-age=300`}}):Response.json({error:{code:`WALLET_CONFIG_UNAVAILABLE`,message:`WalletConnect indisponible.`}},{status:503})}export{t as GET};
