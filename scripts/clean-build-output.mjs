@@ -5,8 +5,6 @@ const projectRoot = resolve(import.meta.dirname, "..");
 const generatedPaths = [
   ".next",
   "dist",
-  "node_modules/.vite",
-  ".wrangler/tmp",
 ];
 
 await Promise.all(
@@ -15,4 +13,4 @@ await Promise.all(
   ),
 );
 
-console.log("Removed stale build output and caches.");
+console.log("Removed stale application build output.");
