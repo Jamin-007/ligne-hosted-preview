@@ -161,8 +161,9 @@ test("uses the shared Reown AppKit connection for Ethereum Mainnet", async () =>
   assert.match(walletAppKit, /new WagmiAdapter/);
   assert.match(walletAppKit, /networks: \[mainnet\]/);
   assert.match(walletAppKit, /modal\.ready\(\)/);
-  assert.match(source, /view: "ConnectingWalletConnect"/);
-  assert.match(transfer, /view: "ConnectingWalletConnect"/);
+  assert.match(source, /view: getWalletConnectView\(\)/);
+  assert.match(transfer, /view: getWalletConnectView\(\)/);
+  assert.match(walletAppKit, /compactViewport[\s\S]*\? "Connect"[\s\S]*: "ConnectingWalletConnect"/);
   assert.doesNotMatch(walletAppKit, /basic:\s*true/);
   assert.doesNotMatch(source, /@walletconnect\/ethereum-provider|EthereumProvider\.init/);
   assert.doesNotMatch(transfer, /@walletconnect\/ethereum-provider|EthereumProvider\.init/);

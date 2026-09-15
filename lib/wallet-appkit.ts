@@ -13,6 +13,8 @@ export type WalletAccountState = {
   status?: "connecting" | "connected" | "disconnected" | "reconnecting";
 };
 
+export type WalletConnectView = "Connect" | "ConnectingWalletConnect";
+
 export type WalletAppKit = {
   close(): Promise<void>;
   disconnect(namespace?: "eip155"): Promise<void>;
@@ -21,7 +23,7 @@ export type WalletAppKit = {
   getProvider<T>(namespace: "eip155"): T | undefined;
   open(options: {
     namespace: "eip155";
-    view: "Connect" | "ConnectingWalletConnect";
+    view: WalletConnectView;
   }): Promise<unknown>;
   ready(): Promise<void>;
   switchNetwork(network: unknown, options?: { throwOnFailure?: boolean }): Promise<void>;
@@ -31,6 +33,18 @@ export type WalletAppKit = {
   ): () => void;
   subscribeProviders(callback: (providers: Record<string, unknown>) => void): () => void;
 };
+
+export function getWalletConnectView(): WalletConnectView {
+  if (typeof navigator === "undefined") return "ConnectingWalletConnect";
+
+  const mobileUserAgent = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  const touchEnabledIPad = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+  const compactViewport = window.matchMedia("(max-width: 767px)").matches;
+
+  return mobileUserAgent || touchEnabledIPad || compactViewport
+    ? "Connect"
+    : "ConnectingWalletConnect";
+}
 
 export async function activateEthereumMainnet(modal: WalletAppKit) {
   const { mainnet } = await import("@reown/appkit/networks");

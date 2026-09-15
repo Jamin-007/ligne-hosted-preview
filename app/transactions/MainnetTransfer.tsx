@@ -12,6 +12,7 @@ import {
 import {
   activateEthereumMainnet,
   getWalletAppKit,
+  getWalletConnectView,
   type WalletAppKit,
   type WalletProvider,
 } from "@/lib/wallet-appkit";
@@ -177,7 +178,7 @@ export function MainnetTransfer() {
 
       await activateEthereumMainnet(modal);
       await modal.close();
-      await modal.open({ view: "ConnectingWalletConnect", namespace: "eip155" });
+      await modal.open({ view: getWalletConnectView(), namespace: "eip155" });
       syncEthereumAccount(modal);
     } catch (caught) {
       console.error("[Ligne WalletConnect] Connexion échouée", caught);
