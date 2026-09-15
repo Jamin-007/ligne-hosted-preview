@@ -12,13 +12,13 @@ export default {
     },
     "6efdf509a785": {
       "js": [
-        "/_next/static/chunks/page-oOo9W5Af.js",
+        "/_next/static/chunks/page-oOo9W5Af-mobile.js",
         "/_next/static/chunks/rolldown-runtime-CNQZ8fZ1.js",
         "/_next/static/chunks/index-CPLNP8u_.js",
         "/_next/static/chunks/framework-DLdkyiLr.js",
         "/_next/static/chunks/AppChrome-Co-5rjeh.js",
         "/_next/static/chunks/LanguageProvider-DOY5lAb8.js",
-        "/_next/static/chunks/wallet-appkit-M4RPKu4o.js"
+        "/_next/static/chunks/wallet-appkit-M4RPKu4o-compatible.js"
       ],
       "css": []
     },
@@ -35,12 +35,12 @@ export default {
     },
     "839e60f7ee11": {
       "js": [
-        "/_next/static/chunks/page-ySb5m7jY.js",
+        "/_next/static/chunks/page-ySb5m7jY-mobile.js",
         "/_next/static/chunks/rolldown-runtime-CNQZ8fZ1.js",
         "/_next/static/chunks/AppChrome-Co-5rjeh.js",
         "/_next/static/chunks/LanguageProvider-DOY5lAb8.js",
         "/_next/static/chunks/framework-DLdkyiLr.js",
-        "/_next/static/chunks/wallet-appkit-M4RPKu4o.js",
+        "/_next/static/chunks/wallet-appkit-M4RPKu4o-compatible.js",
         "/_next/static/chunks/index-CPLNP8u_.js",
         "/_next/static/chunks/verifyHash-DdiiNoWH.js",
         "/_next/static/chunks/utils-CgxU_3TU.js",

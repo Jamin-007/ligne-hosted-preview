@@ -261,8 +261,8 @@
       "_wui-icon-CC7Hfwzk.js"
     ]
   },
-  "_wallet-appkit-M4RPKu4o.js": {
-    "file": "_next/static/chunks/wallet-appkit-M4RPKu4o.js",
+  "_wallet-appkit-M4RPKu4o-compatible.js": {
+    "file": "_next/static/chunks/wallet-appkit-M4RPKu4o-compatible.js",
     "name": "wallet-appkit",
     "imports": [
       "virtual:vinext-app-browser-entry"
@@ -593,7 +593,7 @@
     ]
   },
   "app/page.tsx": {
-    "file": "_next/static/chunks/page-oOo9W5Af.js",
+    "file": "_next/static/chunks/page-oOo9W5Af-mobile.js",
     "name": "page",
     "src": "app/page.tsx",
     "isDynamicEntry": true,
@@ -602,7 +602,7 @@
       "virtual:vinext-app-browser-entry",
       "_AppChrome-Co-5rjeh.js",
       "app/LanguageProvider.tsx",
-      "_wallet-appkit-M4RPKu4o.js",
+      "_wallet-appkit-M4RPKu4o-compatible.js",
       "_framework-DLdkyiLr.js"
     ]
   },
@@ -618,7 +618,7 @@
     ]
   },
   "app/transactions/page.tsx": {
-    "file": "_next/static/chunks/page-ySb5m7jY.js",
+    "file": "_next/static/chunks/page-ySb5m7jY-mobile.js",
     "name": "page",
     "src": "app/transactions/page.tsx",
     "isDynamicEntry": true,
@@ -626,7 +626,7 @@
       "_rolldown-runtime-CNQZ8fZ1.js",
       "_AppChrome-Co-5rjeh.js",
       "app/LanguageProvider.tsx",
-      "_wallet-appkit-M4RPKu4o.js",
+      "_wallet-appkit-M4RPKu4o-compatible.js",
       "_verifyHash-DdiiNoWH.js",
       "__esm-B1J65awx.js",
       "_framework-DLdkyiLr.js"
