@@ -7,9 +7,20 @@ import { extname, join, relative, resolve } from "node:path";
 const projectRoot = resolve(import.meta.dirname, "..");
 const mode = process.argv[2] ?? "all";
 const sourceRoots = ["app", "db", "lib", "public", "worker"];
-const sourceFiles = ["package.json", "vite.config.ts", "tsconfig.json", ".openai/hosting.json"];
+const sourceFiles = ["package.json", "vite.config.ts", "tsconfig.json", "wrangler.jsonc"];
 const outputRoots = ["dist"];
 const ignoredExtensions = new Set([".gif", ".ico", ".jpeg", ".jpg", ".png", ".webp", ".woff", ".woff2"]);
+const nonPersonalSystemIdentifiers = new Set([
+  "admin",
+  "node",
+  "nobody",
+  "render",
+  "root",
+  "runner",
+  "ubuntu",
+  "worker",
+  "www-data",
+]);
 
 function command(args) {
   try {
@@ -26,7 +37,10 @@ function localDenylist() {
   const remote = command(["remote", "get-url", "origin"]);
   const remoteOwner = remote.match(/(?:github\.com|gitlab\.com)[:/]([^/]+)\//i)?.[1];
   values.push(gitName, gitEmail, remoteOwner);
-  return values.filter((value) => typeof value === "string" && value.trim().length >= 4);
+  return values.filter((value) => {
+    if (typeof value !== "string" || value.trim().length < 4) return false;
+    return !nonPersonalSystemIdentifiers.has(value.trim().toLowerCase());
+  });
 }
 
 async function privateDenylist() {
@@ -87,6 +101,11 @@ async function auditFiles(paths, personalValues, secretValues) {
     if (info.size > 8_000_000) continue;
     const content = await readFile(path, "utf8");
     const displayPath = relative(projectRoot, path);
+
+    // Cloudflare's Vite plugin emits an internal deployment manifest with
+    // absolute build-machine paths. Wrangler consumes it locally; it is not a
+    // public application asset or part of the Worker bundle.
+    if (/^dist\/(?:server\/)?wrangler\.json$/.test(displayPath)) continue;
 
     if (/(?:\/home\/[^/\s"'`]+|\/Users\/[^/\s"'`]+|[A-Za-z]:\\Users\\[^\\\s"'`]+)/.test(content)) findings.push([displayPath, "local path"]);
     if (/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i.test(content)) findings.push([displayPath, "email address"]);
