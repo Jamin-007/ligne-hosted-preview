@@ -22,10 +22,6 @@ export function ArrowUpRightIcon(props: IconProps) {
   return <svg {...base} {...props}><path d="M7 17 17 7M8 7h9v9" /></svg>;
 }
 
-export function ArrowDownIcon(props: IconProps) {
-  return <svg {...base} {...props}><path d="M12 5v14M6 13l6 6 6-6" /></svg>;
-}
-
 export function CheckIcon(props: IconProps) {
   return <svg {...base} {...props}><path d="m5 12 4 4L19 6" /></svg>;
 }
@@ -88,8 +84,4 @@ export function SwapIcon(props: IconProps) {
 
 export function CoinIcon(props: IconProps) {
   return <svg {...base} {...props}><circle cx="12" cy="12" r="8.5" /><path d="M9 9.5h4.3a2 2 0 0 1 0 4H10.7a2 2 0 0 0 0 4H15M12 6.5v11" /></svg>;
-}
-
-export function BanknoteIcon(props: IconProps) {
-  return <svg {...base} {...props}><rect x="2.5" y="6" width="19" height="12" rx="2.5" /><circle cx="12" cy="12" r="2.75" /><path d="M6 9v.01M18 15v.01" /></svg>;
 }

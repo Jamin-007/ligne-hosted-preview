@@ -4,7 +4,7 @@
 import { AppFooter, AppHeader } from "../AppChrome";
 import { ArrowRightIcon, CheckIcon, LockIcon, NetworkIcon } from "../Icons";
 import { useLanguage } from "../LanguageProvider";
-import { ReceivingCountryStep } from "./ReceivingCountryStep";
+import { MainnetTransfer } from "./MainnetTransfer";
 
 export default function Transactions() {
   const { t } = useLanguage();
@@ -16,18 +16,18 @@ export default function Transactions() {
       <section className="trust-app-hero">
         <div className="trust-shell trust-app-hero-grid">
           <div>
-            <p className="trust-pill"><i /> Bitcoin + Ethereum Mainnet</p>
+            <p className="trust-pill"><i /> Ethereum Mainnet</p>
             <h1>{t("transactions.title")}<br /><span>{t("transactions.accent")}</span></h1>
           </div>
           <div className="trust-app-hero-aside">
             <p>{t("transactions.lead")}</p>
-            <div className="trust-hero-facts"><span><NetworkIcon /> Bitcoin · Ethereum</span><span><LockIcon /> {t("transactions.localSignature")}</span><span><CheckIcon /> BTC · ETH</span></div>
+            <div className="trust-hero-facts"><span><NetworkIcon /> Chain ID 1</span><span><LockIcon /> {t("transactions.localSignature")}</span><span><CheckIcon /> ETH + USDC</span></div>
           </div>
         </div>
       </section>
 
       <section className="trust-shell trust-transfer-workspace" aria-label={t("transactions.workspace")}>
-        <ReceivingCountryStep />
+        <MainnetTransfer />
         <p className="trust-back-link"><a href="/"><ArrowRightIcon /> {t("transactions.back")}</a></p>
       </section>
 

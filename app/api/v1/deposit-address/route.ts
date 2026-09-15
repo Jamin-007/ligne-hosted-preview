@@ -1,9 +1,8 @@
+import { env } from "cloudflare:workers";
 import { getAddress } from "viem";
-import { getRuntimeEnv } from "@/lib/runtime-env";
 
 export async function GET() {
-  const env = await getRuntimeEnv();
-  const configuredAddress = env.MAINNET_RECEIVER_ADDRESS?.trim();
+  const configuredAddress = (env as unknown as { MAINNET_RECEIVER_ADDRESS?: string }).MAINNET_RECEIVER_ADDRESS?.trim();
   if (!configuredAddress) {
     return Response.json({ error: { message: "Configuration de réception indisponible." } }, { status: 503 });
   }
@@ -19,7 +18,7 @@ export async function GET() {
     {
       data: {
         address,
-        assets: ["ETH", "USDC", "USDT"],
+        assets: ["ETH", "USDC"],
         chain: "ethereum",
         chain_id: 1,
         mode: "MAINNET",

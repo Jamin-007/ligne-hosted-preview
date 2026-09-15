@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRightIcon, ExternalLinkIcon, LockIcon, WalletIcon } from "../Icons";
 import { useLanguage, type TranslationKey } from "../LanguageProvider";
@@ -10,22 +9,12 @@ import {
   type MainnetTransactionRequest,
   type TransferAsset,
 } from "@/lib/mainnet-transfer";
-import { isValidBitcoinMainnetAddress, parseBitcoinAmount } from "@/lib/bitcoin-payment";
 import {
-  activateWalletNetwork,
+  activateEthereumMainnet,
   getWalletAppKit,
   type WalletAppKit,
   type WalletProvider,
 } from "@/lib/wallet-appkit";
-
-type BitcoinWalletProvider = {
-  getAccountAddresses(): Promise<Array<{
-    address: string;
-    purpose?: "payment" | "ordinal" | "stx";
-  }>>;
-  sendTransfer(params: { amount: string; recipient: string }): Promise<string>;
-};
-
 
 type Receipt = {
   blockNumber: string;
@@ -37,28 +26,6 @@ type PreparedTransfer = {
   request: MainnetTransactionRequest;
   requestId: string;
 };
-
-type PreparedBitcoinPayment = {
-  amount: string;
-  amountSats: string;
-  recipientAddress: string;
-  requestId: string;
-};
-
-type SelectableAsset = TransferAsset | "BTC";
-
-type MainnetTransferProps = {
-  conversionReady?: boolean;
-  onConnectionChange?: (connected: boolean) => void;
-};
-
-const ASSET_OPTIONS: Array<{
-  symbol: SelectableAsset;
-  icon: string;
-}> = [
-  { symbol: "BTC", icon: "/wallet-assets/btc.svg" },
-  { symbol: "ETH", icon: "/wallet-assets/eth.svg" },
-];
 
 const CASHBACK_PERCENT = 5n;
 
@@ -108,37 +75,21 @@ function messageFor(error: unknown, t: (key: TranslationKey) => string) {
     return t("error.insufficient");
   }
   if (message.includes("invalid_amount")) return t("error.invalidAmount");
-  if (/bitcoin_receiver_unavailable|invalid_bitcoin_receiver_address/.test(message)) {
-    return t("error.bitcoinConfig");
-  }
-  if (/invalid_bitcoin_account|bitcoin_wallet_unavailable/.test(message)) {
-    return t("error.bitcoinWallet");
-  }
-  if (message.includes("bitcoin_account_unavailable")) {
-    return t("error.bitcoinAccountUnavailable");
-  }
   if (/failed to fetch|networkerror|wallet_config_unavailable/.test(message)) {
     return t("error.service");
   }
   return t("error.transaction");
 }
 
-export function MainnetTransfer({
-  conversionReady = true,
-  onConnectionChange,
-}: MainnetTransferProps = {}) {
+export function MainnetTransfer() {
   const { t } = useLanguage();
   const providerRef = useRef<WalletProvider | null>(null);
   const walletAppKitRef = useRef<WalletAppKit | null>(null);
   const walletUnsubscribeRef = useRef<(() => void) | null>(null);
   const [account, setAccount] = useState<`0x${string}`>();
-  const [bitcoinAccount, setBitcoinAccount] = useState<string>();
-  const [bitcoinWalletConnected, setBitcoinWalletConnected] = useState(false);
-  const [asset, setAsset] = useState<SelectableAsset>("ETH");
+  const [asset, setAsset] = useState<TransferAsset>("ETH");
   const [amount, setAmount] = useState("");
   const [prepared, setPrepared] = useState<PreparedTransfer>();
-  const [bitcoinPayment, setBitcoinPayment] = useState<PreparedBitcoinPayment>();
-  const [bitcoinTxId, setBitcoinTxId] = useState<string>();
   const [hash, setHash] = useState<`0x${string}`>();
   const [receipt, setReceipt] = useState<Receipt>();
   const [status, setStatus] = useState<"idle" | "connecting" | "preparing" | "signing">("idle");
@@ -146,10 +97,6 @@ export function MainnetTransfer({
 
   const amountIsValid = useMemo(() => {
     try {
-      if (asset === "BTC") {
-        parseBitcoinAmount(amount);
-        return true;
-      }
       parseTransferAmount(asset, amount);
       return true;
     } catch {
@@ -157,60 +104,12 @@ export function MainnetTransfer({
     }
   }, [asset, amount]);
   const cashbackAmount = useMemo(() => calculateCashback(amount), [amount]);
-  const activeWalletConnected = asset === "BTC"
-    ? Boolean(bitcoinWalletConnected && bitcoinAccount)
-    : Boolean(account);
 
   function resetTransfer() {
     setPrepared(undefined);
-    setBitcoinPayment(undefined);
-    setBitcoinTxId(undefined);
     setHash(undefined);
     setReceipt(undefined);
     setError("");
-  }
-
-  async function syncBitcoinAccount(
-    modal: WalletAppKit,
-    state = modal.getAccount("bip122"),
-  ) {
-    const stateAddress = state?.address
-      ?? state?.allAccounts?.find((item) => item.type === "payment")?.address
-      ?? state?.allAccounts?.find((item) => item.namespace === "bip122")?.address
-      ?? modal.getAddress("bip122");
-
-    if (stateAddress && await isValidBitcoinMainnetAddress(stateAddress)) {
-      setBitcoinWalletConnected(true);
-      setBitcoinAccount(stateAddress);
-      setError("");
-      sessionStorage.setItem("ligne.bitcoin.address", stateAddress);
-      return true;
-    }
-
-    const provider = modal.getProvider<BitcoinWalletProvider>("bip122");
-    if (provider?.getAccountAddresses) {
-      try {
-        const accounts = await provider.getAccountAddresses();
-        const paymentAccount = accounts.find((item) => item.purpose === "payment")
-          ?? accounts[0];
-        if (paymentAccount && await isValidBitcoinMainnetAddress(paymentAccount.address)) {
-          setBitcoinWalletConnected(true);
-          setBitcoinAccount(paymentAccount.address);
-          setError("");
-          sessionStorage.setItem("ligne.bitcoin.address", paymentAccount.address);
-          return true;
-        }
-      } catch {
-        // Certains connecteurs ne proposent que l'adresse active via AppKit.
-      }
-    }
-
-    if (state?.status === "disconnected") {
-      setBitcoinWalletConnected(false);
-      setBitcoinAccount(undefined);
-      sessionStorage.removeItem("ligne.bitcoin.address");
-    }
-    return false;
   }
 
   function syncEthereumAccount(
@@ -240,122 +139,16 @@ export function MainnetTransfer({
 
   function subscribeWalletState(modal: WalletAppKit) {
     walletUnsubscribeRef.current?.();
-    const unsubscribeEthereum = modal.subscribeAccount((next) => {
+    const unsubscribeAccount = modal.subscribeAccount((next) => {
       syncEthereumAccount(modal, next);
     }, "eip155");
-    const unsubscribeBitcoin = modal.subscribeAccount((next) => {
-      void syncBitcoinAccount(modal, next).then((connected) => {
-        if (!connected && (next.isConnected || next.status === "connected")) {
-          setBitcoinWalletConnected(false);
-          setError(t("error.bitcoinAccountUnavailable"));
-        }
-      });
-    }, "bip122");
     const unsubscribeProviders = modal.subscribeProviders(() => {
       syncEthereumAccount(modal);
-      void syncBitcoinAccount(modal);
     });
     walletUnsubscribeRef.current = () => {
-      unsubscribeEthereum();
-      unsubscribeBitcoin();
+      unsubscribeAccount();
       unsubscribeProviders();
     };
-  }
-
-  async function prepareBitcoinPayment() {
-    const bitcoinProvider = walletAppKitRef.current?.getProvider<BitcoinWalletProvider>("bip122");
-    if (asset !== "BTC" || !bitcoinWalletConnected) {
-      setError(t("error.bitcoinWallet"));
-      return;
-    }
-    if (!bitcoinAccount || !bitcoinProvider) {
-      setError(t("error.bitcoinAccountUnavailable"));
-      return;
-    }
-    setStatus("preparing");
-    setError("");
-    try {
-      const response = await fetch("/api/v1/bitcoin/transfer-requests", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ account: bitcoinAccount, amount }),
-      });
-      const body = await response.json() as {
-        data?: {
-          amount: string;
-          amount_sats: string;
-          recipient_address: string;
-          request_id: string;
-        };
-        error?: { code?: string };
-      };
-      if (!response.ok || !body.data) {
-        throw new Error(body.error?.code ?? "BITCOIN_REQUEST_FAILED");
-      }
-      setBitcoinPayment({
-        amount: body.data.amount,
-        amountSats: body.data.amount_sats,
-        recipientAddress: body.data.recipient_address,
-        requestId: body.data.request_id,
-      });
-      setStatus("signing");
-      const transactionId = await bitcoinProvider!.sendTransfer({
-        amount: body.data.amount_sats,
-        recipient: body.data.recipient_address,
-      });
-      if (!transactionId) throw new Error("BITCOIN_TRANSACTION_FAILED");
-      setBitcoinTxId(transactionId);
-    } catch (caught) {
-      console.error("[Ligne Bitcoin] Échec de la préparation", caught);
-      setError(messageFor(caught, t));
-    } finally {
-      setStatus("idle");
-    }
-  }
-
-  async function connectBitcoin() {
-    setStatus("connecting");
-    setError("");
-    try {
-      const configResponse = await fetch("/api/v1/wallet-config", { cache: "no-store" });
-      if (!configResponse.ok) throw new Error("WALLET_CONFIG_UNAVAILABLE");
-      const config = await configResponse.json() as { projectId?: string };
-      if (!config.projectId) throw new Error("WALLET_CONFIG_UNAVAILABLE");
-
-      const modal = await getWalletAppKit(config.projectId);
-      walletAppKitRef.current = modal;
-      subscribeWalletState(modal);
-
-      if (await syncBitcoinAccount(modal)) {
-        await modal.close();
-        return;
-      }
-      const ethereumAccount = modal.getAccount("eip155");
-      if (
-        ethereumAccount?.isConnected
-        || ethereumAccount?.status === "connected"
-        || ethereumAccount?.status === "reconnecting"
-      ) {
-        try { await modal.disconnect("eip155"); } catch { /* session Reown incomplète */ }
-      }
-      const staleAccount = modal.getAccount("bip122");
-      if (
-        staleAccount?.isConnected
-        || staleAccount?.status === "connected"
-        || staleAccount?.status === "reconnecting"
-      ) {
-        try { await modal.disconnect("bip122"); } catch { /* session Reown incomplète */ }
-      }
-      await activateWalletNetwork(modal, "bip122");
-      await modal.close();
-      await modal.open({ view: "Connect", namespace: "bip122" });
-      await syncBitcoinAccount(modal);
-    } catch (caught) {
-      console.error("[Ligne Bitcoin] Connexion wallet échouée", caught);
-      setError(messageFor(caught, t));
-    } finally {
-      setStatus("idle");
-    }
   }
 
   async function connect() {
@@ -369,19 +162,6 @@ export function MainnetTransfer({
 
       const modal = await getWalletAppKit(config.projectId);
       walletAppKitRef.current = modal;
-      subscribeWalletState(modal);
-      if (syncEthereumAccount(modal)) {
-        await modal.close();
-        return;
-      }
-      const bitcoinAccountState = modal.getAccount("bip122");
-      if (
-        bitcoinAccountState?.isConnected
-        || bitcoinAccountState?.status === "connected"
-        || bitcoinAccountState?.status === "reconnecting"
-      ) {
-        try { await modal.disconnect("bip122"); } catch { /* session Reown incomplète */ }
-      }
       const staleAccount = modal.getAccount("eip155");
       if (
         staleAccount?.isConnected
@@ -390,7 +170,12 @@ export function MainnetTransfer({
       ) {
         try { await modal.disconnect("eip155"); } catch { /* session Reown incomplète */ }
       }
-      await activateWalletNetwork(modal, "eip155");
+      providerRef.current = null;
+      setAccount(undefined);
+      sessionStorage.removeItem("ligne.wallet.address");
+      subscribeWalletState(modal);
+
+      await activateEthereumMainnet(modal);
       await modal.close();
       await modal.open({ view: "Connect", namespace: "eip155" });
       syncEthereumAccount(modal);
@@ -404,7 +189,7 @@ export function MainnetTransfer({
 
   async function submitAndSign() {
     const provider = providerRef.current;
-    if (!provider || !account || asset === "BTC") return;
+    if (!provider || !account) return;
     setError("");
     try {
       const chainId = await provider.request<string>({ method: "eth_chainId" });
@@ -472,143 +257,40 @@ export function MainnetTransfer({
 
   useEffect(() => () => walletUnsubscribeRef.current?.(), []);
 
-  useEffect(() => {
-    onConnectionChange?.(activeWalletConnected);
-  }, [activeWalletConnected, onConnectionChange]);
-
   return (
     <section className="real-transfer" aria-labelledby="real-transfer-title">
       <div className="real-transfer-heading">
         <div>
           <p className="trust-card-kicker"><LockIcon /> {t("transfer.nonCustodial")}</p>
-          <h2 id="real-transfer-title">
-            {conversionReady ? t("transfer.title") : t("transfer.walletFirstTitle")}
-          </h2>
+          <h2 id="real-transfer-title">{t("transfer.title")}</h2>
         </div>
-        <p>{conversionReady ? t("transfer.explainer") : t("transfer.walletFirstExplainer")}</p>
+        <p>{t("transfer.explainer")}</p>
       </div>
 
-      <div className="transfer-asset-selector">
-        <p className="micro-label">{t("transfer.assetSent")}</p>
-        <div className="asset-switch" role="group" aria-label={t("transfer.assetSent")}>
-          {ASSET_OPTIONS.map((option) => (
-            <button
-              key={option.symbol}
-              className={asset === option.symbol ? `active asset-${option.symbol.toLowerCase()}` : `asset-${option.symbol.toLowerCase()}`}
-              type="button"
-              aria-pressed={asset === option.symbol}
-              onClick={() => { setAsset(option.symbol); setAmount(""); resetTransfer(); }}
-            >
-              <Image src={option.icon} alt="" width={30} height={30} />
-              <strong>{option.symbol}</strong>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {asset === "BTC" && !activeWalletConnected ? (
-        <div className="mainnet-connect bitcoin-connect">
-          <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
-          <button className="connect-wallet-cta" type="button" onClick={() => void connectBitcoin()} disabled={status === "connecting"}>
-            <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connectBitcoin")} <ArrowRightIcon /></>}
-          </button>
-          {error && <p className="transfer-error" role="alert">{error}</p>}
-        </div>
-      ) : !activeWalletConnected ? (
+      {!account ? (
         <div className="mainnet-connect">
           <div><strong>{t("transfer.sender")}</strong><span>{t("transfer.notConnected")}</span></div>
-          <button className="connect-wallet-cta" type="button" onClick={() => void connect()} disabled={status === "connecting"}>
-            <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : <>{t("transfer.connect")} <ArrowRightIcon /></>}
+          <button type="button" onClick={() => void connect()} disabled={status === "connecting"}>
+            <WalletIcon /> {status === "connecting" ? t("transfer.openingWallet") : t("transfer.connect")}
           </button>
           {error && <p className="transfer-error" role="alert">{error}</p>}
-        </div>
-      ) : !conversionReady ? (
-        <div className="mainnet-connect wallet-first-ready" role="status">
-          <div>
-            <strong>{t("transfer.walletConnected")}</strong>
-            <span>{asset === "BTC" && bitcoinAccount ? short(bitcoinAccount) : account ? short(account) : t("transfer.notConnected")}</span>
-          </div>
-          <p>{t("transfer.walletConnectedContinue")}</p>
-        </div>
-      ) : asset === "BTC" ? (
-        <div className="transfer-grid bitcoin-transfer-grid">
-          <div className="transfer-form">
-            <div className="connected-sender">
-              <span>{t("transfer.sender")}</span>
-              <strong>{bitcoinAccount ? short(bitcoinAccount) : t("transfer.bitcoinConnected")}</strong>
-            </div>
-            <div className="bitcoin-transfer-intro">
-              <Image src="/wallet-assets/btc.svg" alt="" width={54} height={54} />
-              <div>
-                <span>{t("transfer.bitcoinReadyBadge")}</span>
-                <strong>{t("transfer.bitcoinReadyTitle")}</strong>
-                <p>{t("transfer.bitcoinReadyText")}</p>
-              </div>
-            </div>
-            <fieldset disabled={Boolean(bitcoinTxId)}>
-              <label htmlFor="bitcoin-transfer-amount">{t("transfer.amount")}</label>
-              <div className="mainnet-amount">
-                <input
-                  id="bitcoin-transfer-amount"
-                  inputMode="decimal"
-                  value={amount}
-                  placeholder="0.001"
-                  onChange={(event) => { setAmount(event.target.value); resetTransfer(); }}
-                />
-                <strong>BTC</strong>
-              </div>
-              <div className="transfer-cashback" aria-live="polite">
-                <span>{t("transfer.cashback")} <b>5 %</b></span>
-                <strong>{cashbackAmount ? `+${cashbackAmount} BTC` : "— BTC"}</strong>
-              </div>
-            </fieldset>
-            {!bitcoinAccount && (
-              <p className="transfer-error" role="alert">{t("error.bitcoinAccountUnavailable")}</p>
-            )}
-            {!bitcoinTxId && (
-              <button
-                className="prepare-transfer bitcoin-prepare"
-                type="button"
-                disabled={!amountIsValid || !bitcoinAccount || status !== "idle"}
-                onClick={() => void prepareBitcoinPayment()}
-              >
-                {status === "preparing"
-                  ? t("transfer.bitcoinPreparing")
-                  : status === "signing"
-                    ? t("transfer.confirmWallet")
-                    : bitcoinPayment
-                      ? <>{t("transfer.retry")} <ArrowRightIcon /></>
-                      : <>{t("transfer.submit")} <ArrowRightIcon /></>}
-              </button>
-            )}
-            {error && <p className="transfer-error" role="alert">{error}</p>}
-          </div>
-          <aside className="transfer-review">
-            <p className="micro-label">{t("transfer.receipt")}</p>
-            <dl>
-              <div><dt>{t("transfer.network")}</dt><dd>{t("transfer.bitcoinNetwork")}</dd></div>
-              <div><dt>{t("transfer.asset")}</dt><dd>BTC</dd></div>
-              <div><dt>{t("transfer.amount")}</dt><dd>{(bitcoinPayment?.amount ?? amount) || "—"} BTC</dd></div>
-              <div><dt>{t("transfer.destination")}</dt><dd>{t("transfer.inWallet")}</dd></div>
-              {bitcoinPayment && <div><dt>{t("transfer.satoshis")}</dt><dd>{bitcoinPayment.amountSats}</dd></div>}
-              {bitcoinPayment && <div><dt>{t("transfer.request")}</dt><dd><code>{bitcoinPayment.requestId}</code></dd></div>}
-              <div><dt>{t("transfer.networkFees")}</dt><dd>{t("transfer.feesInWallet")}</dd></div>
-            </dl>
-            {bitcoinTxId && (
-              <div className="transfer-result bitcoin-result success" role="status">
-                <strong>{t("transfer.bitcoinSent")}</strong>
-                <code>{bitcoinTxId}</code>
-                <a href={`https://mempool.space/tx/${bitcoinTxId}`} target="_blank" rel="noreferrer">{t("transfer.bitcoinExplorer")} <ExternalLinkIcon /></a>
-                <button type="button" onClick={() => { setAmount(""); resetTransfer(); }}>{t("transfer.new")}</button>
-              </div>
-            )}
-          </aside>
         </div>
       ) : (
         <div className="transfer-grid">
           <div className="transfer-form">
             <div className="connected-sender"><span>{t("transfer.sender")}</span><strong>{short(account)}</strong></div>
             <fieldset disabled={Boolean(hash)}>
+              <legend>{t("transfer.assetSent")}</legend>
+              <div className="asset-switch">
+                {(["ETH", "USDC"] as const).map((option) => (
+                  <button
+                    key={option}
+                    className={asset === option ? "active" : ""}
+                    type="button"
+                    onClick={() => { setAsset(option); resetTransfer(); }}
+                  >{option}</button>
+                ))}
+              </div>
               <label htmlFor="transfer-amount">{t("transfer.amount")}</label>
               <div className="mainnet-amount">
                 <input
@@ -643,7 +325,7 @@ export function MainnetTransfer({
           <aside className="transfer-review">
             <p className="micro-label">{t("transfer.receipt")}</p>
             <dl>
-              <div><dt>{t("transfer.network")}</dt><dd>{t("transfer.ethereumNetwork")} · 1</dd></div>
+              <div><dt>{t("transfer.network")}</dt><dd>Ethereum Mainnet · 1</dd></div>
               <div><dt>{t("transfer.asset")}</dt><dd>{asset}</dd></div>
               <div><dt>{t("transfer.amount")}</dt><dd>{amount || "—"} {asset}</dd></div>
               <div><dt>{t("transfer.destination")}</dt><dd>{t("transfer.inWallet")}</dd></div>

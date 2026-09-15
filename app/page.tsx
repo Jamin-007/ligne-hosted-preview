@@ -1,25 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { AppFooter, AppHeader, countryLabel, CountryFlag, footerCountries } from "./AppChrome";
-import { ConversionPreviewCard } from "./ConversionPreviewCard";
+import { AppFooter, AppHeader } from "./AppChrome";
 import {
   ArrowRightIcon,
   ArrowUpRightIcon,
-  BanknoteIcon,
   CheckIcon,
   KeyIcon,
   LockIcon,
-  MobileMoneyIcon,
   ReceiptIcon,
   SignatureIcon,
-  SwapIcon,
+  UsdcIcon,
 } from "./Icons";
 import { useLanguage } from "./LanguageProvider";
-
-const mobileMoneyCountries = footerCountries.filter(
-  (country) => country.code === "sn" || country.code === "ci" || country.code === "ke",
-);
+import { WalletConnectCard } from "./WalletConnectCard";
 
 const wallets = [
   { name: "MetaMask", image: "/wallet-assets/metamask.svg" },
@@ -48,12 +42,13 @@ export default function Home() {
             <p className="trust-pill"><i /> {t("home.mainnetAvailable")}</p>
             <h1 id="trust-hero-title">
               {t("home.heroTitle")}<br />
-              <span>{t("home.heroAccent")}</span>
+              <span>{t("home.heroAccent")}</span><br />
+              {t("home.heroThird")}
             </h1>
             <p className="trust-hero-lead">{t("home.heroLead")}</p>
-            <p className="trust-hero-assets">{t("home.heroAssets")}</p>
             <div className="trust-hero-actions">
               <a className="trust-button" href="/transactions">{t("home.sendNow")} <ArrowRightIcon /></a>
+              <a className="trust-button trust-button-ghost" href="/receive">{t("home.viewAddress")}</a>
             </div>
             <ul className="trust-proof-list">
               <li><b><CheckIcon /></b> {t("home.nonCustodial")}</li>
@@ -67,11 +62,11 @@ export default function Home() {
             <div className="trust-orbit trust-orbit-two" />
             <div className="trust-phone">
               <div className="trust-phone-speaker" />
-              <ConversionPreviewCard />
+              <WalletConnectCard />
             </div>
             <div className="trust-float-card" aria-hidden="true">
               <div className="trust-float-card-top"><span>ligne/ conversion</span><b>{t("home.preview")}</b></div>
-              <div className="trust-float-assets"><MobileMoneyIcon /><strong>Mobile Money</strong></div>
+              <div className="trust-float-assets"><Image src="/wallet-assets/ethereum.svg" alt="" width={34} height={34} /><strong>ETH + USDC</strong></div>
               <code>{t("home.secureRequest")}</code>
             </div>
             <div className="trust-lock-chip" aria-hidden="true"><SignatureIcon /> {t("home.localSignature")}</div>
@@ -96,23 +91,6 @@ export default function Home() {
             </div>
           </div>
           <p className="trust-wallet-note">{t("home.walletsNote")}</p>
-
-          <p className="trust-section-kicker trust-countries-kicker">{t("home.countriesKicker")}</p>
-          <div className="trust-country-marquee">
-            <div className="trust-country-track">
-              {[false, true].map((duplicate) => (
-                <div className="trust-country-set" key={duplicate ? "copy" : "original"} aria-hidden={duplicate}>
-                  {mobileMoneyCountries.map((country) => (
-                    <div className="trust-country-chip" key={`${country.code}-${duplicate}`}>
-                      <CountryFlag code={country.code} />
-                      <span>{countryLabel(country, t)}</span>
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
-          <p className="trust-wallet-note">{t("home.countriesNote")}</p>
         </div>
       </section>
 
@@ -148,16 +126,13 @@ export default function Home() {
           </div>
           <div className="trust-asset-stack">
             <article className="trust-asset-card trust-asset-eth">
-              <div className="trust-asset-icons">
-                <Image src="/wallet-assets/eth.svg" alt="Ethereum" width={44} height={44} />
-                <Image src="/wallet-assets/btc.svg" alt="Bitcoin" width={44} height={44} />
-              </div>
-              <div><span>{t("home.nativeAsset")}</span><strong>{t("home.cryptoAssetsLabel")}</strong><small>{t("home.cryptoAssetsList")}</small></div>
+              <Image src="/wallet-assets/ethereum.svg" alt="Ethereum" width={54} height={54} />
+              <div><span>{t("home.nativeAsset")}</span><strong>Ethereum</strong><small>ETH</small></div>
             </article>
-            <div className="trust-chain-badge"><span>{t("home.chainBadgeTop")}</span><i className="trust-chain-badge-icon"><SwapIcon /></i><small>{t("home.chainBadgeBottom")}</small></div>
-            <article className="trust-asset-card trust-asset-local">
-              <div className="trust-local-mark"><BanknoteIcon /></div>
-              <div><span>{t("home.officialContract")}</span><strong>{t("home.localCurrenciesLabel")}</strong><small>{t("home.localCurrenciesList")}</small></div>
+            <div className="trust-chain-badge"><span>CHAIN ID</span><strong>1</strong><small>MAINNET</small></div>
+            <article className="trust-asset-card trust-asset-usdc">
+              <div className="trust-usdc-mark"><UsdcIcon /></div>
+              <div><span>{t("home.officialContract")}</span><strong>USD Coin</strong><small>USDC</small></div>
             </article>
           </div>
         </div>

@@ -1,40 +1,31 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { headers } from "next/headers";
 import { LanguageProvider } from "./LanguageProvider";
 import "./globals.css";
-import "flag-icons/css/flag-icons.min.css";
 
 const sans = Geist({ variable: "--font-sans", subsets: ["latin"] });
 const mono = Geist_Mono({ variable: "--font-mono", subsets: ["latin"] });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
-  const protocol = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-  const socialImage = `${protocol}://${host}/og.png`;
-
-  return {
-    title: "Ligne — BTC et ETH vers votre argent local",
-    description: "Convertissez BTC et ETH en monnaie locale et recevez votre argent via Mobile Money ou compte bancaire.",
-    openGraph: {
-      title: "Votre crypto, enfin locale.",
-      description: "BTC et ETH réunis dans une expérience de conversion claire.",
-      images: [{
-        url: socialImage,
-        width: 1732,
-        height: 909,
-        alt: "Ligne — BTC et ETH vers votre monnaie locale",
-      }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: "Votre crypto, enfin locale.",
-      description: "BTC et ETH réunis dans une expérience de conversion claire.",
-      images: [socialImage],
-    },
-  };
-}
+export const metadata: Metadata = {
+  title: "Ligne — De la crypto à votre argent local",
+  description: "Convertissez vos actifs numériques en monnaie locale et recevez votre argent via Mobile Money ou compte bancaire.",
+  openGraph: {
+    title: "Votre crypto. Votre monnaie. Votre argent.",
+    description: "Convertissez vos actifs numériques en monnaie locale avec Ligne.",
+    images: [{
+      url: "https://ligne-crypto-eur.penielteko02.chatgpt.site/og.png",
+      width: 1732,
+      height: 909,
+      alt: "Ligne — de la crypto à votre monnaie locale",
+    }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Votre crypto. Votre monnaie. Votre argent.",
+    description: "Convertissez vos actifs numériques en monnaie locale avec Ligne.",
+    images: ["https://ligne-crypto-eur.penielteko02.chatgpt.site/og.png"],
+  },
+};
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return <html lang="fr"><body className={`${sans.variable} ${mono.variable}`}><LanguageProvider>{children}</LanguageProvider></body></html>;

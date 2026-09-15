@@ -1,6 +1,6 @@
+import { env } from "cloudflare:workers";
 import { getAddress, isAddress } from "viem";
 import { buildMainnetTransaction, type TransferAsset } from "@/lib/mainnet-transfer";
-import { getRuntimeEnv } from "@/lib/runtime-env";
 
 type TransferRequestBody = {
   account?: string;
@@ -14,8 +14,7 @@ function json(body: unknown, status = 200) {
 
 export async function POST(request: Request) {
   try {
-    const env = await getRuntimeEnv();
-    const receiverAddress = env.MAINNET_RECEIVER_ADDRESS?.trim();
+    const receiverAddress = (env as unknown as { MAINNET_RECEIVER_ADDRESS?: string }).MAINNET_RECEIVER_ADDRESS?.trim();
     if (!receiverAddress) {
       return json({ error: { message: "Configuration de réception indisponible." } }, 503);
     }
@@ -24,7 +23,7 @@ export async function POST(request: Request) {
     if (!body.account || !isAddress(body.account)) {
       return json({ error: { message: "Wallet émetteur invalide." } }, 400);
     }
-    if (body.asset !== "ETH" && body.asset !== "USDC" && body.asset !== "USDT") {
+    if (body.asset !== "ETH" && body.asset !== "USDC") {
       return json({ error: { message: "Actif non pris en charge." } }, 400);
     }
     if (!body.amount) {

@@ -1,8 +1,7 @@
-import { getRuntimeEnv } from "@/lib/runtime-env";
+import { env } from "cloudflare:workers";
 
 export async function GET() {
-  const env = await getRuntimeEnv();
-  const projectId = env.REOWN_PROJECT_ID?.trim();
+  const projectId = (env as unknown as { REOWN_PROJECT_ID?: string }).REOWN_PROJECT_ID?.trim();
   if (!projectId) {
     return Response.json({ error: { code: "WALLET_CONFIG_UNAVAILABLE", message: "WalletConnect indisponible." } }, { status: 503 });
   }
